@@ -396,8 +396,7 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
                   {/* 2b. Favorite Toggle Switch */}
                   <div className="flex flex-col gap-1.5">
                     <span className="text-xs font-bold text-slate-700 tracking-wide uppercase">Yêu thích</span>
-                    <div className="flex items-center justify-between p-3 bg-slate-50 border border-slate-200/60 rounded-xl h-[42px]">
-                      <span className="text-xs font-bold text-slate-700">Món ăn yêu thích</span>
+                    <div className="flex items-center p-3 bg-slate-50 border border-slate-200/60 rounded-xl h-[42px]">
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input 
                           type="checkbox" 

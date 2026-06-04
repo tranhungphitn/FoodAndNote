@@ -223,8 +223,7 @@ export default function DishFormScreen({ dish, mode, onSave, onCancel }: DishFor
                   {/* C. Favorite Toggle Switch */}
                   <div className="flex flex-col gap-2">
                     <span className="text-xs font-black text-slate-700 tracking-wider uppercase">Yêu thích</span>
-                    <div className="flex items-center justify-between px-5 py-3.5 bg-slate-50 border border-slate-200/60 rounded-2xl h-[54px]">
-                      <span className="text-sm font-semibold text-slate-700">Món ăn yêu thích</span>
+                    <div className="flex items-center px-5 py-3.5 bg-slate-50 border border-slate-200/60 rounded-2xl h-[54px]">
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input 
                           type="checkbox" 
