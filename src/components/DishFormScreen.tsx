@@ -14,6 +14,7 @@ interface DishFormScreenProps {
     instructions: string;
     imageUrl: string;
     isFavorite: boolean;
+    summary: string;
   }) => void;
   onCancel: () => void;
 }
@@ -25,6 +26,7 @@ export default function DishFormScreen({ dish, mode, onSave, onCancel }: DishFor
   const [instructions, setInstructions] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [isFavorite, setIsFavorite] = useState(false);
+  const [summary, setSummary] = useState('');
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
@@ -36,6 +38,7 @@ export default function DishFormScreen({ dish, mode, onSave, onCancel }: DishFor
       setInstructions('');
       setImageUrl('');
       setIsFavorite(false);
+      setSummary('');
       setErrors({});
     } else if (dish) {
       setName(dish.name);
@@ -44,6 +47,7 @@ export default function DishFormScreen({ dish, mode, onSave, onCancel }: DishFor
       setInstructions(dish.instructions);
       setImageUrl(dish.imageUrl);
       setIsFavorite(dish.isFavorite || false);
+      setSummary(dish.summary || '');
       setErrors({});
     }
   }, [dish, mode]);
@@ -117,6 +121,7 @@ export default function DishFormScreen({ dish, mode, onSave, onCancel }: DishFor
       instructions: formattedInstructions,
       imageUrl: imageUrl.trim(),
       isFavorite,
+      summary: summary.trim(),
     });
   };
 
@@ -185,6 +190,21 @@ export default function DishFormScreen({ dish, mode, onSave, onCancel }: DishFor
                     } focus:bg-white rounded-2xl px-5 py-4 outline-hidden focus:ring-4 focus:ring-[#FF7675]/10 focus:border-[#FF7675] transition-all`}
                   />
                   {errors.name && <span className="text-xs font-semibold text-red-500 mt-1">{errors.name}</span>}
+                </div>
+
+                {/* A2. Summary Input */}
+                <div className="flex flex-col gap-2">
+                  <label htmlFor="dish-summary" className="text-xs font-black text-slate-700 tracking-wider uppercase">
+                    Tóm Tắt Món Ăn
+                  </label>
+                  <input
+                    id="dish-summary"
+                    type="text"
+                    placeholder="Ví dụ: Món canh chua thanh mát đậm đà cho ngày hè..."
+                    value={summary}
+                    onChange={(e) => setSummary(e.target.value)}
+                    className="w-full text-sm font-semibold text-slate-800 bg-slate-50 border border-slate-200 focus:bg-white rounded-2xl px-5 py-4 outline-hidden focus:ring-4 focus:ring-[#FF7675]/10 focus:border-[#FF7675] transition-all"
+                  />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">

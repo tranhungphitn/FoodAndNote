@@ -103,10 +103,15 @@ export default function DishCard({ dish, onViewDetails, onEdit, onDelete, onTogg
           {/* Dish name with line clamps to support multi-line title heights */}
           <h3 
             onClick={() => onViewDetails(dish)}
-            className="font-extrabold text-slate-800 text-base leading-tight tracking-tight mb-2 group-hover:text-[#FF7675] hover:underline transition-colors line-clamp-1 cursor-pointer"
+            className="font-extrabold text-slate-800 text-base leading-tight tracking-tight mb-1 group-hover:text-[#FF7675] hover:underline transition-colors line-clamp-1 cursor-pointer"
           >
             {dish.name}
           </h3>
+          {dish.summary && (
+            <p className="text-[11px] font-semibold text-slate-400 italic mb-2 line-clamp-1">
+              {dish.summary}
+            </p>
+          )}
 
           {/* Core materials list */}
           <div className="flex gap-2 items-start mt-1.5 mb-2">

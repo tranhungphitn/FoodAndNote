@@ -16,6 +16,7 @@ export interface Dish {
   category: string;
   updatedAt: string;
   isFavorite?: boolean;
+  summary?: string;
 }
 
 export type ThemeMode = 'light' | 'dark';

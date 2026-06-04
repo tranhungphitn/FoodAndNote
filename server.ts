@@ -102,6 +102,7 @@ async function startServer() {
         instructions: dishData.instructions || '',
         imageUrl: dishData.imageUrl || '',
         isFavorite: !!dishData.isFavorite,
+        summary: dishData.summary || '',
         updatedAt: new Date().toISOString()
       };
       dishes.unshift(newDish);

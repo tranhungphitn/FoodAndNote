@@ -128,6 +128,8 @@ export default function App() {
     ingredients: string;
     instructions: string;
     imageUrl: string;
+    isFavorite?: boolean;
+    summary?: string;
   }) => {
     const targetDish: Partial<Dish> = {
       name: dishData.name,
@@ -135,6 +137,8 @@ export default function App() {
       ingredients: dishData.ingredients,
       instructions: dishData.instructions,
       imageUrl: dishData.imageUrl,
+      isFavorite: dishData.isFavorite,
+      summary: dishData.summary || '',
     };
     
     if (dishFormMode === 'edit' && selectedDish) {

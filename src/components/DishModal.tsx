@@ -21,6 +21,7 @@ interface DishModalProps {
     instructions: string;
     imageUrl: string;
     isFavorite: boolean;
+    summary: string;
   }) => void;
   onSwitchToEdit?: (dish: Dish) => void;
 }
@@ -32,6 +33,7 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
   const [instructions, setInstructions] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [isFavorite, setIsFavorite] = useState(false);
+  const [summary, setSummary] = useState('');
   const [showManualUrlInput, setShowManualUrlInput] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
@@ -47,6 +49,7 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
         setInstructions('');
         setImageUrl(PRESET_RECIPE_IMAGES[0]?.url || '');
         setIsFavorite(false);
+        setSummary('');
         setShowManualUrlInput(false);
         setErrors({});
       } else if (dish) {
@@ -56,6 +59,7 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
         setInstructions(dish.instructions);
         setImageUrl(dish.imageUrl);
         setIsFavorite(dish.isFavorite || false);
+        setSummary(dish.summary || '');
         setErrors({});
 
         // Determine if image URL matches one of our presets, otherwise default show manual input
@@ -137,6 +141,7 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
       instructions: formattedInstructions,
       imageUrl: imageUrl.trim(),
       isFavorite,
+      summary: summary.trim(),
     });
     onClose();
   };
@@ -244,6 +249,11 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
             {/* VIEW MODE DETAILS PANEL */}
             {mode === 'view' && dish && (
               <div className="space-y-6">
+                {dish.summary && (
+                  <div className="bg-amber-50/40 border border-amber-100/70 p-4.5 rounded-2xl text-sm font-semibold text-amber-900/80 leading-relaxed italic">
+                    💡 {dish.summary}
+                  </div>
+                )}
                 {/* 1. Ingredients section as an interactive list */}
                 <div className="bg-slate-50/80 rounded-2xl p-5 border border-slate-100">
                   <div className="flex items-center gap-2 mb-3.5 border-b border-slate-200 pb-2.5">
@@ -362,6 +372,21 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
                     } focus:bg-white rounded-xl px-4 py-3 outline-hidden focus:ring-4 focus:ring-[#4834D4]/10 focus:border-[#4834D4]`}
                   />
                   {errors.name && <span className="text-xs font-semibold text-red-500 mt-1">{errors.name}</span>}
+                </div>
+
+                {/* 1b. Summary Input */}
+                <div className="flex flex-col gap-1.5">
+                  <label htmlFor="dish-summary" className="text-xs font-bold text-slate-700 tracking-wide uppercase">
+                    Tóm Tắt Món Ăn
+                  </label>
+                  <input
+                    id="dish-summary"
+                    type="text"
+                    placeholder="Ví dụ: Món canh chua thanh mát đậm đà cho ngày hè..."
+                    value={summary}
+                    onChange={(e) => setSummary(e.target.value)}
+                    className="w-full text-sm font-semibold text-slate-800 bg-slate-50 border border-slate-200 focus:bg-white rounded-xl px-4 py-3 outline-hidden focus:ring-4 focus:ring-[#4834D4]/10 focus:border-[#4834D4]"
+                  />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
