@@ -421,7 +421,6 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
 
                   {!showManualUrlInput ? (
                     <div>
-                      <p className="text-[11px] text-slate-500 mb-2">Nhấp chọn một ảnh đại diện phù hợp nhất:</p>
                       <div className="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-thin">
                         {PRESET_RECIPE_IMAGES.map((preset, index) => {
                           const isSelected = imageUrl === preset.url;
@@ -470,7 +469,6 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
                           errors.imageUrl ? 'border-red-400' : 'border-slate-200'
                         } rounded-xl px-4 py-2.5 focus:bg-white outline-hidden`}
                       />
-                      <p className="text-[10px] text-slate-400">Chọn link ảnh hợp lệ bắt đầu bằng http:// hoặc https://</p>
                     </div>
                   )}
 
@@ -503,7 +501,6 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
                     <label htmlFor="dish-ingredients" className="text-xs font-bold text-slate-700 tracking-wide uppercase">
                       Thành Phần Nguyên Liệu <span className="text-red-500">*</span>
                     </label>
-                    <span className="text-[10px] text-slate-400">Ghi cách dòng bằng phím Enter</span>
                   </div>
                   <textarea
                     id="dish-ingredients"
@@ -527,7 +524,6 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
                     <label htmlFor="dish-instructions" className="text-xs font-bold text-slate-700 tracking-wide uppercase">
                       Quy trình Các Bước Chế Biến <span className="text-red-500">*</span>
                     </label>
-                    <span className="text-[10px] text-slate-400">Ghi bước 1, bước 2 ngăn cách dòng</span>
                   </div>
                   <textarea
                     id="dish-instructions"

@@ -161,12 +161,11 @@ export default function DishFormScreen({ dish, mode, onSave, onCancel }: DishFor
           <div className="space-y-6">
             {/* DIV 1: THÔNG TIN CHUNG (Tên món ăn, Phân Loại & Ảnh đại diện) */}
             <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-xs space-y-6" id="div-general-info">
-              <div className="border-b border-slate-100 pb-4 mb-2">
+              <div className="border-b border-slate-100 pb-3 mb-1">
                 <h3 className="text-base font-black text-slate-800 tracking-tight flex items-center gap-2">
                   <span className="w-2.5 h-6 bg-[#FF7675] rounded-full inline-block"></span>
                   Thông tin chung & Ảnh đại diện
                 </h3>
-                <p className="text-xs text-slate-400 font-medium">Nhập tên món ăn, lựa chọn phân loại và dán hình ảnh đại diện</p>
               </div>
 
               <div className="grid grid-cols-1 gap-6">
@@ -277,7 +276,7 @@ export default function DishFormScreen({ dish, mode, onSave, onCancel }: DishFor
                       errors.imageUrl ? 'border-red-400 ring-2 ring-red-100/50' : 'border-slate-200'
                     } focus:bg-white rounded-2xl px-5 py-4 outline-hidden focus:ring-4 focus:ring-[#FF7675]/10 focus:border-[#FF7675] transition-all`}
                   />
-                  <p className="text-[10px] text-slate-400 leading-snug">URL phải hợp lệ bắt đầu bằng <code>http://</code> hoặc <code>https://</code></p>
+
                   {errors.imageUrl && <span className="text-xs font-semibold text-red-500 mt-1">{errors.imageUrl}</span>}
                 </div>
 
@@ -314,18 +313,16 @@ export default function DishFormScreen({ dish, mode, onSave, onCancel }: DishFor
           <div className="space-y-6">
             {/* DIV 2: THÀNH PHẦN NGUYÊN LIỆU */}
             <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-xs flex flex-col gap-2" id="div-ingredients-only">
-              <div className="border-b border-slate-100 pb-3 mb-1">
+              <div className="border-b border-slate-100 pb-2 mb-1">
                 <h3 className="text-base font-black text-slate-800 tracking-tight flex items-center gap-2">
                   <span className="w-2.5 h-6 bg-[#00CEC9] rounded-full inline-block"></span>
                   Thành Phần Nguyên Liệu
                 </h3>
-                <p className="text-xs text-slate-400 font-medium">Liệt kê tất cả các gia vị, nguyên liệu thiết yếu cho món ngon này</p>
               </div>
               <div className="flex items-center justify-between">
                 <label htmlFor="dish-ingredients" className="text-xs font-black text-slate-500 tracking-wider uppercase">
                   Danh sách chi tiết <span className="text-red-500 font-extrabold">*</span>
                 </label>
-                <span className="text-[10px] text-slate-400 font-medium">Ấn phím Enter để ngăn cách dòng</span>
               </div>
               <textarea
                 id="dish-ingredients"
@@ -345,18 +342,16 @@ export default function DishFormScreen({ dish, mode, onSave, onCancel }: DishFor
 
             {/* DIV 3: HƯỚNG DẪN QUY TRÌNH CHẾ BIẾN */}
             <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-xs flex flex-col gap-2" id="div-instructions-only">
-              <div className="border-b border-slate-100 pb-3 mb-1">
+              <div className="border-b border-slate-100 pb-2 mb-1">
                 <h3 className="text-base font-black text-slate-800 tracking-tight flex items-center gap-2">
                   <span className="w-2.5 h-6 bg-[#E17055] rounded-full inline-block"></span>
                   Hướng Dẫn Quy Trình Chế Biến
                 </h3>
-                <p className="text-xs text-slate-400 font-medium">Sắp xếp các bước thực hiện tuần tự để có kết quả mĩ vị nhất</p>
               </div>
               <div className="flex items-center justify-between">
                 <label htmlFor="dish-instructions" className="text-xs font-black text-slate-500 tracking-wider uppercase">
                   Cách thực hiện từng bước <span className="text-red-500 font-extrabold">*</span>
                 </label>
-                <span className="text-[10px] text-slate-400 font-medium">Ngăn dòng từng bước bằng phím Enter</span>
               </div>
               <textarea
                 id="dish-instructions"
