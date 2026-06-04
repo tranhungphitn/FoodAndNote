@@ -634,7 +634,7 @@ service cloud.firestore {
         )}
         
         {/* Desktop Quick Nav Tabs (Hidden on mobile as it relies on Native Bottom Bar) */}
-        <div className="hidden sm:flex items-center justify-between pb-4 mb-6 font-sans">
+        <div className="hidden sm:flex items-center justify-between pb-1 mb-3 font-sans">
           <div className="flex gap-1.5 p-1.5 glass rounded-2xl">
             <button
               onClick={() => setActiveTab('dishes')}
