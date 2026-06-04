@@ -371,12 +371,21 @@ export default function App() {
     }
   };
 
-  // Recipe filtration logic
-  const filteredDishes = dishes.filter(dish => {
-    return dish.name.toLowerCase().includes(dishSearch.toLowerCase()) || 
-           dish.ingredients.toLowerCase().includes(dishSearch.toLowerCase()) ||
-           dish.category.toLowerCase().includes(dishSearch.toLowerCase());
-  });
+  // Recipe filtration and sorting logic (Favorite first, then sorted by newest updatedAt)
+  const filteredDishes = dishes
+    .filter(dish => {
+      return dish.name.toLowerCase().includes(dishSearch.toLowerCase()) || 
+             dish.ingredients.toLowerCase().includes(dishSearch.toLowerCase()) ||
+             dish.category.toLowerCase().includes(dishSearch.toLowerCase());
+    })
+    .sort((a, b) => {
+      const favA = a.isFavorite ? 1 : 0;
+      const favB = b.isFavorite ? 1 : 0;
+      if (favA !== favB) {
+        return favB - favA; // Favorite (1) before non-favorite (0)
+      }
+      return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(); // Newest first
+    });
 
   // Pagination config
   const ITEMS_PER_PAGE = 8;
