@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Check, Camera, ListChecks, HelpCircle, Utensils, Award, BookOpen, Edit, Heart, List, ListOrdered, Type } from 'lucide-react';
+import { X, Check, Camera, ListChecks, HelpCircle, Utensils, Award, BookOpen, Edit, Heart, List, ListOrdered, Type, Bold, Italic } from 'lucide-react';
 import { Dish } from '../types';
 import { PRESET_RECIPE_IMAGES, DISH_CATEGORIES } from '../sampleData';
 import { motion, AnimatePresence } from 'motion/react';
@@ -107,6 +107,25 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
       .join('\n');
   };
 
+  const parseMarkdown = (text: string) => {
+    if (!text) return '';
+    // Escape HTML first to prevent XSS
+    let safe = text
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+      
+    // Replace **bold** with <strong>bold</strong>
+    safe = safe.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+    
+    // Replace *italic* with <em>italic</em>
+    safe = safe.replace(/\*(.*?)\*/g, "<em>$1</em>");
+    
+    return safe;
+  };
+
   const insertTextAtCursor = (
     textareaId: string,
     prefix: string,
@@ -127,6 +146,31 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
     setTimeout(() => {
       el.focus();
       el.setSelectionRange(start + prefix.length, start + prefix.length + selected.length);
+    }, 10);
+  };
+
+  const insertFormatting = (
+    textareaId: string,
+    marker: string,
+    setValue: (val: string) => void
+  ) => {
+    const el = document.getElementById(textareaId) as HTMLTextAreaElement | null;
+    if (!el) return;
+    const start = el.selectionStart;
+    const end = el.selectionEnd;
+    const text = el.value;
+    const selected = text.substring(start, end);
+    const replacement = marker + selected + marker;
+    const newVal = text.substring(0, start) + replacement + text.substring(end);
+    setValue(newVal);
+    
+    // Focus back and select formatted text
+    setTimeout(() => {
+      el.focus();
+      el.setSelectionRange(
+        start + marker.length,
+        start + marker.length + selected.length
+      );
     }, 10);
   };
 
@@ -286,7 +330,7 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
                              className="text-sm text-slate-700 leading-relaxed flex items-start gap-2 font-semibold"
                            >
                              <span className="text-[#FF7675] font-extrabold mt-0.5 shrink-0 select-none">•</span>
-                             <span className="break-all">{displayLine}</span>
+                             <span className="break-all" dangerouslySetInnerHTML={{ __html: parseMarkdown(displayLine) }} />
                            </li>
                          );
                        })}
@@ -320,9 +364,10 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
                               {stepNum}
                             </div>
                             {/* Detailed Instruction Text */}
-                            <p className="text-sm text-slate-600 leading-relaxed break-words font-medium pt-0.5">
-                              {stepText}
-                            </p>
+                            <p 
+                              className="text-sm text-slate-600 leading-relaxed break-words font-medium pt-0.5"
+                              dangerouslySetInnerHTML={{ __html: parseMarkdown(stepText) }}
+                            />
                           </div>
                         );
                       })}
@@ -540,6 +585,25 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
                       <div className="w-[1px] h-3 bg-slate-300 mx-1" />
                       <button
                         type="button"
+                        onClick={() => insertFormatting('dish-ingredients-modal', '**', setIngredients)}
+                        className="px-2 py-1 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-md text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
+                        title="Chữ đậm"
+                      >
+                        <Bold className="w-3 h-3 text-slate-500" />
+                        <span>Đậm</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => insertFormatting('dish-ingredients-modal', '*', setIngredients)}
+                        className="px-2 py-1 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-md text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
+                        title="Chữ nghiêng"
+                      >
+                        <Italic className="w-3 h-3 text-slate-500" />
+                        <span>Nghiêng</span>
+                      </button>
+                      <div className="w-[1px] h-3 bg-slate-300 mx-1" />
+                      <button
+                        type="button"
                         onClick={() => setIngredients(capitalizeFirstLetterOfLines(ingredients))}
                         className="px-2 py-1 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-md text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
                         title="Tự động viết hoa đầu dòng"
@@ -583,6 +647,25 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
                       >
                         <ListOrdered className="w-3 h-3 text-slate-500" />
                         <span>Thêm bước số</span>
+                      </button>
+                      <div className="w-[1px] h-3 bg-slate-300 mx-1" />
+                      <button
+                        type="button"
+                        onClick={() => insertFormatting('dish-instructions-modal', '**', setInstructions)}
+                        className="px-2 py-1 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-md text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
+                        title="Chữ đậm"
+                      >
+                        <Bold className="w-3 h-3 text-slate-500" />
+                        <span>Đậm</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => insertFormatting('dish-instructions-modal', '*', setInstructions)}
+                        className="px-2 py-1 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-md text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
+                        title="Chữ nghiêng"
+                      >
+                        <Italic className="w-3 h-3 text-slate-500" />
+                        <span>Nghiêng</span>
                       </button>
                       <div className="w-[1px] h-3 bg-slate-300 mx-1" />
                       <button

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Check, Camera, ListChecks, Utensils, BookOpen, List, ListOrdered, Type } from 'lucide-react';
+import { ArrowLeft, Check, Camera, ListChecks, Utensils, BookOpen, List, ListOrdered, Type, Bold, Italic } from 'lucide-react';
 import { Dish } from '../types';
 import { PRESET_RECIPE_IMAGES, DISH_CATEGORIES } from '../sampleData';
 import { motion } from 'motion/react';
@@ -110,6 +110,31 @@ export default function DishFormScreen({ dish, mode, onSave, onCancel }: DishFor
     setTimeout(() => {
       el.focus();
       el.setSelectionRange(start + prefix.length, start + prefix.length + selected.length);
+    }, 10);
+  };
+
+  const insertFormatting = (
+    textareaId: string,
+    marker: string,
+    setValue: (val: string) => void
+  ) => {
+    const el = document.getElementById(textareaId) as HTMLTextAreaElement | null;
+    if (!el) return;
+    const start = el.selectionStart;
+    const end = el.selectionEnd;
+    const text = el.value;
+    const selected = text.substring(start, end);
+    const replacement = marker + selected + marker;
+    const newVal = text.substring(0, start) + replacement + text.substring(end);
+    setValue(newVal);
+    
+    // Focus back and select formatted text
+    setTimeout(() => {
+      el.focus();
+      el.setSelectionRange(
+        start + marker.length,
+        start + marker.length + selected.length
+      );
     }, 10);
   };
 
@@ -362,6 +387,25 @@ export default function DishFormScreen({ dish, mode, onSave, onCancel }: DishFor
                   <div className="w-[1px] h-4 bg-slate-300 mx-1" />
                   <button
                     type="button"
+                    onClick={() => insertFormatting('dish-ingredients', '**', setIngredients)}
+                    className="px-2.5 py-1.5 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
+                    title="Chữ đậm"
+                  >
+                    <Bold className="w-3.5 h-3.5 text-slate-500" />
+                    <span>Đậm</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => insertFormatting('dish-ingredients', '*', setIngredients)}
+                    className="px-2.5 py-1.5 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
+                    title="Chữ nghiêng"
+                  >
+                    <Italic className="w-3.5 h-3.5 text-slate-500" />
+                    <span>Nghiêng</span>
+                  </button>
+                  <div className="w-[1px] h-4 bg-slate-300 mx-1" />
+                  <button
+                    type="button"
                     onClick={() => setIngredients(capitalizeFirstLetterOfLines(ingredients))}
                     className="px-2.5 py-1.5 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
                     title="Tự động viết hoa đầu dòng"
@@ -411,6 +455,25 @@ export default function DishFormScreen({ dish, mode, onSave, onCancel }: DishFor
                   >
                     <ListOrdered className="w-3.5 h-3.5 text-slate-500" />
                     <span>Thêm bước số</span>
+                  </button>
+                  <div className="w-[1px] h-4 bg-slate-300 mx-1" />
+                  <button
+                    type="button"
+                    onClick={() => insertFormatting('dish-instructions', '**', setInstructions)}
+                    className="px-2.5 py-1.5 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
+                    title="Chữ đậm"
+                  >
+                    <Bold className="w-3.5 h-3.5 text-slate-500" />
+                    <span>Đậm</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => insertFormatting('dish-instructions', '*', setInstructions)}
+                    className="px-2.5 py-1.5 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
+                    title="Chữ nghiêng"
+                  >
+                    <Italic className="w-3.5 h-3.5 text-slate-500" />
+                    <span>Nghiêng</span>
                   </button>
                   <div className="w-[1px] h-4 bg-slate-300 mx-1" />
                   <button
