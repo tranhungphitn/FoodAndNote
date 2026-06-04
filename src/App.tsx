@@ -11,7 +11,9 @@ import {
   Calendar,
   Layers,
   Heart,
-  AlertTriangle
+  AlertTriangle,
+  CheckCircle2,
+  XCircle
 } from 'lucide-react';
 import { Note, Dish } from './types';
 import { SAMPLE_NOTES, SAMPLE_DISHES, DISH_CATEGORIES } from './sampleData';
@@ -52,6 +54,54 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [syncError, setSyncError] = useState<string | null>(null);
 
+  // Toast notification state
+  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+  
+  const showToast = (message: string, type: 'success' | 'error' = 'success') => {
+    setToast({ message, type });
+  };
+
+  useEffect(() => {
+    if (toast) {
+      const timer = setTimeout(() => {
+        setToast(null);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [toast]);
+
+  const renderToast = () => (
+    <AnimatePresence>
+      {toast && (
+        <motion.div
+          initial={{ opacity: 0, y: -50, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -20, scale: 0.95 }}
+          transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+          className="fixed top-6 left-1/2 -translate-x-1/2 z-9999 flex items-center gap-2.5 px-4.5 py-3 rounded-2xl shadow-lg border backdrop-blur-md max-w-sm w-max pointer-events-none"
+          style={{
+            backgroundColor: toast.type === 'success' ? 'rgba(240, 253, 244, 0.95)' : 'rgba(254, 242, 242, 0.95)',
+            borderColor: toast.type === 'success' ? '#22c55e' : '#ef4444',
+          }}
+        >
+          {toast.type === 'success' ? (
+            <CheckCircle2 className="w-5 h-5 text-[#22c55e] shrink-0" />
+          ) : (
+            <XCircle className="w-5 h-5 text-[#ef4444] shrink-0" />
+          )}
+          <span 
+            className="text-xs sm:text-sm font-black tracking-tight"
+            style={{
+              color: toast.type === 'success' ? '#15803d' : '#b91c1c',
+            }}
+          >
+            {toast.message}
+          </span>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
+
   // User Role/Login states
   const [userRole, setUserRole] = useState<'admin' | 'guest' | null>(() => {
     const savedRole = localStorage.getItem('sotay_user_role');
@@ -68,14 +118,17 @@ export default function App() {
       setUserRole('admin');
       setPassword('');
       setPassError('');
+      showToast('Đăng nhập quyền Admin thành công!', 'success');
     } else {
       setPassError('Mật khẩu không chính xác. Vui lòng thử lại!');
+      showToast('Mật khẩu không chính xác!', 'error');
     }
   };
 
   const handleLogout = () => {
     localStorage.removeItem('sotay_user_role');
     setUserRole(null);
+    showToast('Đăng xuất thành công!', 'success');
   };
 
   // Load from Firebase Firestore on mount
@@ -206,9 +259,11 @@ export default function App() {
     try {
       await setDoc(doc(db, 'dishes', targetDish.id), targetDish);
       setSyncError(null);
+      showToast(isEdit ? 'Đã cập nhật công thức thành công!' : 'Đã thêm công thức mới thành công!', 'success');
     } catch (err: any) {
       console.error('Failed to save dish to Firestore:', err);
       setSyncError(`Không thể lưu món ăn lên Firebase: ${err.message || err}`);
+      showToast('Lỗi khi đồng bộ lên Firebase. Đang lưu tạm Offline!', 'error');
     }
 
     setDishFormMode(null);
@@ -225,9 +280,11 @@ export default function App() {
     try {
       await deleteDoc(doc(db, 'dishes', id));
       setSyncError(null);
+      showToast('Đã xóa công thức thành công!', 'success');
     } catch (err: any) {
       console.error('Failed to sync deletion to Firestore:', err);
       setSyncError(`Không thể xóa món ăn trên Firebase: ${err.message || err}`);
+      showToast('Lỗi khi xóa công thức trên Firebase!', 'error');
     }
   };
 
@@ -237,9 +294,11 @@ export default function App() {
     try {
       await setDoc(doc(db, 'dishes', dish.id), updatedDish);
       setSyncError(null);
+      showToast(updatedDish.isFavorite ? 'Đã lưu vào Yêu thích!' : 'Đã xóa khỏi Yêu thích!', 'success');
     } catch (err: any) {
       console.error('Failed to sync favorite status to Firestore:', err);
       setSyncError(`Không thể cập nhật yêu thích trên Firebase: ${err.message || err}`);
+      showToast('Lỗi khi cập nhật trạng thái yêu thích!', 'error');
     }
   };
 
@@ -296,9 +355,11 @@ export default function App() {
     try {
       await setDoc(doc(db, 'notes', targetNote.id), targetNote);
       setSyncError(null);
+      showToast(selectedNote ? 'Cập nhật ghi chú thành công!' : 'Tạo ghi chú mới thành công!', 'success');
     } catch (err: any) {
       console.error('Failed to save note to Firestore:', err);
       setSyncError(`Không thể lưu ghi chú lên Firebase: ${err.message || err}`);
+      showToast('Lỗi khi đồng bộ ghi chú lên Firebase!', 'error');
     }
     setIsNoteModalOpen(false);
     setSelectedNote(null);
@@ -309,9 +370,11 @@ export default function App() {
     try {
       await deleteDoc(doc(db, 'notes', id));
       setSyncError(null);
+      showToast('Đã xóa ghi chú thành công!', 'success');
     } catch (err: any) {
       console.error('Failed to sync note delete to Firestore:', err);
       setSyncError(`Không thể xóa ghi chú trên Firebase: ${err.message || err}`);
+      showToast('Lỗi khi xóa ghi chú trên Firebase!', 'error');
     }
   };
 
@@ -359,9 +422,11 @@ export default function App() {
     try {
       await setDoc(doc(db, 'notes', id), updatedNote);
       setSyncError(null);
+      showToast(updatedNote.isPinned ? 'Đã ghim ghi chú!' : 'Đã bỏ ghim ghi chú!', 'success');
     } catch (err: any) {
       console.error('Failed to sync pin toggle to Firestore:', err);
       setSyncError(`Không thể ghim ghi chú trên Firebase: ${err.message || err}`);
+      showToast('Lỗi khi ghim ghi chú trên Firebase!', 'error');
     }
   };
 
@@ -479,6 +544,7 @@ export default function App() {
                   onClick={() => {
                     localStorage.setItem('sotay_user_role', 'guest');
                     setUserRole('guest');
+                    showToast('Đăng nhập với quyền Xem thành công!', 'success');
                   }}
                   className="w-full py-3.5 bg-gradient-to-r from-[#FF7675] to-[#E17055] text-white rounded-2xl text-sm font-black active:scale-98 transition-all shadow-md shadow-[#FF7675]/30 hover:shadow-lg hover:brightness-110 cursor-pointer"
                 >
@@ -518,6 +584,7 @@ export default function App() {
             )}
           </div>
         </div>
+        {renderToast()}
       </div>
     );
   }
@@ -534,6 +601,7 @@ export default function App() {
             setSelectedDish(null);
           }}
         />
+        {renderToast()}
       </div>
     );
   }
@@ -1105,6 +1173,7 @@ service cloud.firestore {
         )}
       </AnimatePresence>
 
+      {renderToast()}
     </div>
   );
 }
