@@ -24,9 +24,10 @@ interface DishModalProps {
     summary: string;
   }) => void;
   onSwitchToEdit?: (dish: Dish) => void;
+  readOnly?: boolean;
 }
 
-export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitchToEdit }: DishModalProps) {
+export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitchToEdit, readOnly }: DishModalProps) {
   const [name, setName] = useState('');
   const [category, setCategory] = useState(DISH_CATEGORIES[1] || 'Món mặn');
   const [ingredients, setIngredients] = useState('');
@@ -201,7 +202,7 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
               </button>
 
               {/* Float edit button on detail screen */}
-              {onSwitchToEdit && (
+              {!readOnly && onSwitchToEdit && (
                 <button
                   onClick={() => onSwitchToEdit(dish)}
                   type="button"

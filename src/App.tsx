@@ -52,6 +52,32 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [syncError, setSyncError] = useState<string | null>(null);
 
+  // User Role/Login states
+  const [userRole, setUserRole] = useState<'admin' | 'guest' | null>(() => {
+    const savedRole = localStorage.getItem('sotay_user_role');
+    return (savedRole === 'admin' || savedRole === 'guest') ? savedRole : null;
+  });
+  const [loginMode, setLoginMode] = useState<'admin' | 'guest'>('guest');
+  const [password, setPassword] = useState('');
+  const [passError, setPassError] = useState('');
+
+  const handleAdminLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password === '1478965') {
+      localStorage.setItem('sotay_user_role', 'admin');
+      setUserRole('admin');
+      setPassword('');
+      setPassError('');
+    } else {
+      setPassError('Mật khẩu không chính xác. Vui lòng thử lại!');
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('sotay_user_role');
+    setUserRole(null);
+  };
+
   // Load from Firebase Firestore on mount
   useEffect(() => {
     const checkAndInitData = async () => {
@@ -392,6 +418,106 @@ export default function App() {
     );
   }
 
+  if (!userRole) {
+    return (
+      <div className="min-h-screen bg-slate-100 flex items-center justify-center p-4 font-sans relative overflow-hidden bg-gradient-to-tr from-[#f1f2f6] via-slate-50 to-[#e8e9f5]">
+        {/* Decorative background shapes */}
+        <div className="absolute top-[-10%] right-[-10%] w-96 h-96 bg-[#4834D4]/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-[-10%] left-[-10%] w-96 h-96 bg-[#FF7675]/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="w-full max-w-md bg-white/80 backdrop-blur-xl rounded-3xl p-8 border border-white/20 shadow-2xl flex flex-col items-center gap-6 relative z-10">
+          <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-[#4834D4] via-[#686DE0] to-[#E056FD] p-0.5 shadow-lg overflow-hidden flex items-center justify-center">
+            <img src="/avatar.png" alt="Leo's Ghi Chú Logo" className="w-full h-full object-cover rounded-xl" />
+          </div>
+          
+          <div className="text-center space-y-1">
+            <h1 className="text-2xl font-black text-slate-800 tracking-tight font-sans">Leo's Ghi Chú</h1>
+            <p className="text-xs text-slate-500 font-semibold">Chào mừng bạn đến với sổ tay ẩm thực và ghi chú cá nhân</p>
+          </div>
+
+          {/* Toggle buttons for Login Mode */}
+          <div className="w-full p-1 bg-slate-200/50 rounded-2xl flex gap-1 border border-slate-200/30">
+            <button
+              onClick={() => {
+                setLoginMode('guest');
+                setPassError('');
+              }}
+              className={`flex-1 py-3 text-xs font-bold rounded-xl transition-all cursor-pointer ${
+                loginMode === 'guest'
+                  ? 'bg-white text-slate-800 shadow-xs'
+                  : 'text-slate-500 hover:text-slate-700'
+              }`}
+            >
+              Chỉ Xem Công Thức
+            </button>
+            <button
+              onClick={() => {
+                setLoginMode('admin');
+                setPassError('');
+              }}
+              className={`flex-1 py-3 text-xs font-bold rounded-xl transition-all cursor-pointer ${
+                loginMode === 'admin'
+                  ? 'bg-white text-[#4834D4] shadow-xs'
+                  : 'text-slate-500 hover:text-slate-700'
+              }`}
+            >
+              Quyền Admin
+            </button>
+          </div>
+
+          <div className="w-full min-h-[140px] flex flex-col justify-center">
+            {loginMode === 'guest' ? (
+              <div className="text-center space-y-4 py-2">
+                <p className="text-sm text-slate-600 leading-relaxed font-medium">
+                  Truy cập nhanh với chế độ <strong>Chỉ Xem Công Thức</strong>. Bạn có thể xem toàn bộ các công thức nấu ăn ngon nhưng không thể thêm, sửa, hay xóa dữ liệu.
+                </p>
+                <button
+                  onClick={() => {
+                    localStorage.setItem('sotay_user_role', 'guest');
+                    setUserRole('guest');
+                  }}
+                  className="w-full py-3.5 bg-[#FF7675] hover:bg-[#E17055] text-white rounded-2xl text-sm font-black active:scale-98 transition-all shadow-md shadow-[#FF7675]/15 hover:shadow-lg cursor-pointer"
+                >
+                  Vào Xem Ngay
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleAdminLogin} className="w-full space-y-4">
+                <div className="space-y-1.5">
+                  <label className="text-[11px] font-black text-slate-500 uppercase tracking-wider">
+                    Nhập mật khẩu Admin
+                  </label>
+                  <input
+                    type="password"
+                    placeholder="Mật khẩu của bạn..."
+                    value={password}
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      if (passError) setPassError('');
+                    }}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3.5 text-sm focus:outline-hidden focus:ring-4 focus:ring-[#4834D4]/10 focus:border-[#4834D4] focus:bg-white font-medium"
+                    autoFocus
+                  />
+                  {passError && (
+                    <p className="text-xs font-semibold text-red-500 mt-1 pl-1">
+                      {passError}
+                    </p>
+                  )}
+                </div>
+                <button
+                  type="submit"
+                  className="w-full py-3.5 bg-[#4834D4] hover:bg-[#3B2BB0] text-white rounded-2xl text-sm font-black active:scale-98 transition-all shadow-md shadow-[#4834D4]/15 hover:shadow-lg cursor-pointer"
+                >
+                  Xác nhận Admin
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (dishFormMode) {
     return (
       <div className="min-h-screen bg-slate-50 text-slate-800 flex flex-col font-sans pb-8">
@@ -445,6 +571,34 @@ export default function App() {
               </div>
             </div>
 
+            {/* Admin status badge & logout/login trigger */}
+            <div className="flex items-center gap-2">
+              {userRole === 'admin' ? (
+                <>
+                  <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-bold px-3 py-1.5 rounded-2xl backdrop-blur-xs">
+                    Admin
+                  </span>
+                  <button
+                    onClick={handleLogout}
+                    className="bg-white/10 hover:bg-white/20 text-white text-xs font-bold px-3 py-1.5 rounded-2xl border border-white/15 active:scale-95 transition-all cursor-pointer"
+                  >
+                    Đăng xuất
+                  </button>
+                </>
+              ) : (
+                <>
+                  <span className="bg-white/10 text-slate-200 border border-white/10 text-xs font-bold px-3 py-1.5 rounded-2xl backdrop-blur-xs">
+                    Chỉ Xem
+                  </span>
+                  <button
+                    onClick={handleLogout}
+                    className="bg-[#FF7675] hover:bg-[#E17055] text-white text-xs font-black px-3 py-1.5 rounded-2xl shadow-xs active:scale-95 transition-all cursor-pointer"
+                  >
+                    Đăng nhập Admin
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </header>
@@ -525,16 +679,18 @@ service cloud.firestore {
             </button>
           </div>
 
-          <button
-            onClick={activeTab === 'dishes' ? handleOpenCreateDish : handleOpenCreateNote}
-            className={`flex items-center gap-1.5 px-5 py-3 text-white rounded-xl text-sm font-black active:scale-98 transition-all cursor-pointer shadow-xs ${
-              activeTab === 'dishes' ? 'bg-[#FF7675] hover:bg-[#E17055]' : 'bg-[#4834D4] hover:bg-[#3B2BB0]'
-            }`}
-            id="desktop-btn-add-primary"
-          >
-            <Plus className="w-4 h-4" />
-            {activeTab === 'dishes' ? 'Thêm món ăn mới' : 'Tạo ghi chú mới'}
-          </button>
+          {userRole === 'admin' && (
+            <button
+              onClick={activeTab === 'dishes' ? handleOpenCreateDish : handleOpenCreateNote}
+              className={`flex items-center gap-1.5 px-5 py-3 text-white rounded-xl text-sm font-black active:scale-98 transition-all cursor-pointer shadow-xs ${
+                activeTab === 'dishes' ? 'bg-[#FF7675] hover:bg-[#E17055]' : 'bg-[#4834D4] hover:bg-[#3B2BB0]'
+              }`}
+              id="desktop-btn-add-primary"
+            >
+              <Plus className="w-4 h-4" />
+              {activeTab === 'dishes' ? 'Thêm món ăn mới' : 'Tạo ghi chú mới'}
+            </button>
+          )}
         </div>
 
         {/* =======================================
@@ -637,6 +793,7 @@ service cloud.firestore {
                         onEdit={handleOpenEditDish}
                         onDelete={requestDeleteDish}
                         onToggleFavorite={handleToggleFavoriteDish}
+                        readOnly={userRole !== 'admin'}
                       />
                     ))}
                   </div>
@@ -765,6 +922,7 @@ service cloud.firestore {
                             onEdit={handleOpenEditNote}
                             onDelete={requestDeleteNote}
                             onTogglePin={handleTogglePinNote}
+                            readOnly={userRole !== 'admin'}
                           />
                         ))}
                       </div>
@@ -788,6 +946,7 @@ service cloud.firestore {
                             onEdit={handleOpenEditNote}
                             onDelete={requestDeleteNote}
                             onTogglePin={handleTogglePinNote}
+                            readOnly={userRole !== 'admin'}
                           />
                         ))}
                       </div>
@@ -835,19 +994,21 @@ service cloud.firestore {
       </main>
 
       {/* 3. Floating Action Buttons (FABs) for Mobile Sizing */}
-      <div className="sm:hidden fixed bottom-20 right-5 z-40">
-        <button
-          onClick={activeTab === 'dishes' ? handleOpenCreateDish : handleOpenCreateNote}
-          type="button"
-          className={`w-14 h-14 bg-gradient-to-tr text-white rounded-full flex items-center justify-center shadow-lg active:scale-95 transition-all ${
-            activeTab === 'dishes' ? 'from-[#FF7675] to-[#E17055]' : 'from-[#4834D4] to-[#686DE0]'
-          }`}
-          id="btn-fab-add"
-          title={activeTab === 'dishes' ? 'Thêm món ăn' : 'Thêm ghi chú'}
-        >
-          <Plus className="w-7 h-7" />
-        </button>
-      </div>
+      {userRole === 'admin' && (
+        <div className="sm:hidden fixed bottom-20 right-5 z-40">
+          <button
+            onClick={activeTab === 'dishes' ? handleOpenCreateDish : handleOpenCreateNote}
+            type="button"
+            className={`w-14 h-14 bg-gradient-to-tr text-white rounded-full flex items-center justify-center shadow-lg active:scale-95 transition-all ${
+              activeTab === 'dishes' ? 'from-[#FF7675] to-[#E17055]' : 'from-[#4834D4] to-[#686DE0]'
+            }`}
+            id="btn-fab-add"
+            title={activeTab === 'dishes' ? 'Thêm món ăn' : 'Thêm ghi chú'}
+          >
+            <Plus className="w-7 h-7" />
+          </button>
+        </div>
+      )}
 
       {/* 4. Fixed Native Bottom Navigation Hub (Highly Optimized for Mobile Screens) */}
       <nav className="sm:hidden fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-slate-200/80 px-6 py-2.5 flex justify-around items-center z-45 shadow-2xl">
@@ -899,6 +1060,7 @@ service cloud.firestore {
         mode={dishModalMode}
         onSave={handleSaveDish}
         onSwitchToEdit={handleSwitchToEditDish}
+        readOnly={userRole !== 'admin'}
       />
 
       {/* C. Clean, elegant, in-app Delete Confirmation Dialog */}

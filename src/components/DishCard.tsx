@@ -10,9 +10,10 @@ interface DishCardProps {
   onEdit: (dish: Dish) => void;
   onDelete: (id: string) => void;
   onToggleFavorite: (dish: Dish) => void;
+  readOnly?: boolean;
 }
 
-export default function DishCard({ dish, onViewDetails, onEdit, onDelete, onToggleFavorite }: DishCardProps) {
+export default function DishCard({ dish, onViewDetails, onEdit, onDelete, onToggleFavorite, readOnly }: DishCardProps) {
   // Simple check helper for fallback images
   const itemImage = dish.imageUrl || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80';
 
@@ -72,32 +73,34 @@ export default function DishCard({ dish, onViewDetails, onEdit, onDelete, onTogg
         </div>
 
         {/* Quick action triggers floating over top-right */}
-        <div className="absolute top-2 right-2 sm:top-3 sm:right-3 flex items-center gap-1 sm:gap-1.5 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onEdit(dish);
-            }}
-            type="button"
-            className="p-1.5 sm:p-2.5 bg-white/95 backdrop-blur-md hover:bg-[#4834D4] text-slate-700 hover:text-white rounded-full shadow-sm transition-all cursor-pointer"
-            title="Sửa công thức"
-            id={`btn-edit-dish-${dish.id}`}
-          >
-            <Edit className="w-3.5 h-3.5" />
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete(dish.id);
-            }}
-            type="button"
-            className="p-1.5 sm:p-2.5 bg-white/95 backdrop-blur-md hover:bg-[#FF7675] text-slate-700 hover:text-white rounded-full shadow-sm transition-all cursor-pointer"
-            title="Xóa món ăn"
-            id={`btn-delete-dish-${dish.id}`}
-          >
-            <Trash2 className="w-3.5 h-3.5" />
-          </button>
-        </div>
+        {!readOnly && (
+          <div className="absolute top-2 right-2 sm:top-3 sm:right-3 flex items-center gap-1 sm:gap-1.5 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit(dish);
+              }}
+              type="button"
+              className="p-1.5 sm:p-2.5 bg-white/95 backdrop-blur-md hover:bg-[#4834D4] text-slate-700 hover:text-white rounded-full shadow-sm transition-all cursor-pointer"
+              title="Sửa công thức"
+              id={`btn-edit-dish-${dish.id}`}
+            >
+              <Edit className="w-3.5 h-3.5" />
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onDelete(dish.id);
+              }}
+              type="button"
+              className="p-1.5 sm:p-2.5 bg-white/95 backdrop-blur-md hover:bg-[#FF7675] text-slate-700 hover:text-white rounded-full shadow-sm transition-all cursor-pointer"
+              title="Xóa món ăn"
+              id={`btn-delete-dish-${dish.id}`}
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Main Body Column */}
@@ -128,10 +131,12 @@ export default function DishCard({ dish, onViewDetails, onEdit, onDelete, onTogg
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                onToggleFavorite(dish);
+                if (!readOnly) {
+                  onToggleFavorite(dish);
+                }
               }}
               type="button"
-              className="flex items-center gap-1.5 p-1 sm:p-1.5 rounded-xl hover:bg-slate-50 transition-all duration-200 cursor-pointer"
+              className={`flex items-center gap-1.5 p-1 sm:p-1.5 rounded-xl transition-all duration-200 ${readOnly ? 'cursor-default pointer-events-none' : 'hover:bg-slate-50 cursor-pointer'}`}
               title={dish.isFavorite ? "Bỏ yêu thích" : "Yêu thích món ăn"}
               id={`btn-fav-toggle-dish-${dish.id}`}
             >
