@@ -37,8 +37,7 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
   const [showManualUrlInput, setShowManualUrlInput] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  // Local ingredients checkbox list state for kitchen help view
-  const [checkedIngredients, setCheckedIngredients] = useState<{ [key: number]: boolean }>({});
+
 
   useEffect(() => {
     if (isOpen) {
@@ -65,9 +64,6 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
         // Determine if image URL matches one of our presets, otherwise default show manual input
         const holdsPreset = PRESET_RECIPE_IMAGES.some(p => p.url === dish.imageUrl);
         setShowManualUrlInput(!holdsPreset);
-
-        // Reset ingredients checkbox states
-        setCheckedIngredients({});
       }
     }
   }, [isOpen, dish, mode]);
@@ -146,12 +142,7 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
     onClose();
   };
 
-  const toggleIngredientCheck = (idx: number) => {
-    setCheckedIngredients(prev => ({
-      ...prev,
-      [idx]: !prev[idx]
-    }));
-  };
+
 
   if (!isOpen) return null;
 
@@ -254,53 +245,34 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
                     💡 {dish.summary}
                   </div>
                 )}
-                {/* 1. Ingredients section as an interactive list */}
-                <div className="bg-slate-50/80 rounded-2xl p-5 border border-slate-100">
-                  <div className="flex items-center gap-2 mb-3.5 border-b border-slate-200 pb-2.5">
-                    <ListChecks className="w-5 h-5 text-[#FF7675]" />
-                    <h3 className="text-sm font-bold text-slate-800 uppercase tracking-widest">
-                      Thành phần nguyên liệu
-                    </h3>
-                    <span className="ml-auto text-xs font-mono font-medium text-slate-500">
-                      Tích chọn để chuẩn chuẩn bị
-                    </span>
-                  </div>
+                 {/* 1. Ingredients section as a simple static list */}
+                 <div className="bg-slate-50/80 rounded-2xl p-5 border border-slate-100">
+                   <div className="flex items-center gap-2 mb-3 border-b border-slate-200 pb-2.5">
+                     <ListChecks className="w-5 h-5 text-[#FF7675]" />
+                     <h3 className="text-sm font-bold text-slate-800 uppercase tracking-widest">
+                       Thành phần nguyên liệu
+                     </h3>
+                   </div>
 
-                  {ingredientRows.length === 0 ? (
-                    <p className="text-xs italic text-slate-400">Chưa viết nguyên liệu cụ thể.</p>
-                  ) : (
-                    <div className="grid grid-cols-1 gap-2.5">
-                      {ingredientRows.map((line, idx) => {
-                        const isChecked = !!checkedIngredients[idx];
-                        const displayLine = line.replace(/^-\s*/, '').trim();
-                        return (
-                          <div
-                            key={idx}
-                            onClick={() => toggleIngredientCheck(idx)}
-                            className={`flex items-start gap-3 p-2.5 rounded-xl cursor-copy transition-all ${
-                              isChecked
-                                ? 'bg-[#FFEAEA] opacity-80'
-                                : 'hover:bg-white border border-transparent hover:border-slate-150'
-                            }`}
-                          >
-                            <div className={`mt-0.5 w-5 h-5 rounded-md border flex items-center justify-center shrink-0 transition-colors ${
-                              isChecked
-                                ? 'bg-[#FF7675] border-[#FF7675] text-white'
-                                : 'border-slate-300 bg-white'
-                            }`}>
-                              {isChecked && <Check className="w-3.5 h-3.5 font-extrabold" />}
-                            </div>
-                            <span className={`text-sm text-slate-700 leading-normal break-all select-none ${
-                              isChecked ? 'line-through text-slate-400 font-medium' : 'font-medium'
-                            }`}>
-                              {displayLine}
-                            </span>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
+                   {ingredientRows.length === 0 ? (
+                     <p className="text-xs italic text-slate-400">Chưa viết nguyên liệu cụ thể.</p>
+                   ) : (
+                     <ul className="space-y-2 pl-1.5 list-none">
+                       {ingredientRows.map((line, idx) => {
+                         const displayLine = line.replace(/^-\s*/, '').trim();
+                         return (
+                           <li
+                             key={idx}
+                             className="text-sm text-slate-700 leading-relaxed flex items-start gap-2 font-semibold"
+                           >
+                             <span className="text-[#FF7675] font-extrabold mt-0.5 shrink-0 select-none">•</span>
+                             <span className="break-all">{displayLine}</span>
+                           </li>
+                         );
+                       })}
+                     </ul>
+                   )}
+                 </div>
 
                 {/* 2. Cooking Steps / Instructions */}
                 <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-xs">
