@@ -49,7 +49,7 @@ export default function DishCard({ dish, onViewDetails, onEdit, onDelete, onTogg
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
       transition={{ duration: 0.25 }}
-      className="group bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-300 overflow-hidden flex flex-col justify-between h-[390px]"
+      className="group bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-300 overflow-hidden flex flex-col justify-between h-[330px]"
       id={`dish-card-${dish.id}`}
     >
       {/* Visual Header / Cover Photo */}
@@ -103,24 +103,20 @@ export default function DishCard({ dish, onViewDetails, onEdit, onDelete, onTogg
           {/* Dish name with line clamps to support multi-line title heights */}
           <h3 
             onClick={() => onViewDetails(dish)}
-            className="font-extrabold text-slate-800 text-base leading-tight tracking-tight mb-1 group-hover:text-[#FF7675] hover:underline transition-colors line-clamp-1 cursor-pointer"
+            className="font-extrabold text-slate-800 text-base leading-tight tracking-tight mb-2 group-hover:text-[#FF7675] hover:underline transition-colors line-clamp-1 cursor-pointer"
           >
             {dish.name}
           </h3>
-          {dish.summary && (
-            <p className="text-[11px] font-semibold text-slate-400 italic mb-2 line-clamp-1">
+          {/* Dish summary (if present) */}
+          {dish.summary ? (
+            <p className="text-xs font-semibold text-slate-400 italic leading-relaxed break-words line-clamp-2">
               {dish.summary}
             </p>
+          ) : (
+            <p className="text-xs italic text-slate-350 leading-relaxed font-medium">
+              Chưa cập nhật tóm tắt.
+            </p>
           )}
-
-          {/* Core materials list */}
-          <div className="flex gap-2 items-start mt-1.5 mb-2">
-            <ListChecks className="w-4 h-4 text-emerald-600 shrink-0 mt-0.5" />
-            <div className="text-xs text-slate-500 leading-snug break-words line-clamp-3">
-              <span className="font-extrabold text-[#2D3436] block text-[11px] uppercase tracking-wider mb-0.5">Nguyên liệu</span>
-              {getIngredientsSummary(dish.ingredients) || <em className="text-slate-300">Chưa cập nhật nguyên liệu</em>}
-            </div>
-          </div>
         </div>
 
         {/* Footer click actions */}
