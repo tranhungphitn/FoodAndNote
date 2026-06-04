@@ -169,9 +169,7 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
 
   if (!isOpen) return null;
 
-  // Split ingredients & instructions into clean array rows for readable viewing
-  const ingredientRows = dish ? dish.ingredients.split('\n').filter(r => r.trim().length > 0) : [];
-  const instructionRows = dish ? dish.instructions.split('\n').filter(r => r.trim().length > 0) : [];
+  // Render instructions & ingredients directly preserving original formatting
 
   return (
     <AnimatePresence>
@@ -273,23 +271,13 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
                      </h3>
                    </div>
 
-                   {ingredientRows.length === 0 ? (
+                   {!dish.ingredients || dish.ingredients.trim().length === 0 ? (
                      <p className="text-xs italic text-slate-400">Chưa viết nguyên liệu cụ thể.</p>
                    ) : (
-                     <ul className="space-y-2 pl-1.5 list-none">
-                       {ingredientRows.map((line, idx) => {
-                         const displayLine = line.replace(/^-\s*/, '').trim();
-                         return (
-                           <li
-                             key={idx}
-                             className="text-sm text-slate-700 leading-relaxed flex items-start gap-2 font-semibold"
-                           >
-                             <span className="text-[#FF7675] font-extrabold mt-0.5 shrink-0 select-none">•</span>
-                             <span className="break-all" dangerouslySetInnerHTML={{ __html: parseMarkdown(displayLine) }} />
-                           </li>
-                         );
-                       })}
-                     </ul>
+                     <div 
+                       className="text-sm text-slate-700 leading-relaxed font-semibold whitespace-pre-wrap break-words pl-1.5"
+                       dangerouslySetInnerHTML={{ __html: parseMarkdown(dish.ingredients) }}
+                     />
                    )}
                  </div>
 
@@ -302,31 +290,13 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
                     </h3>
                   </div>
 
-                  {instructionRows.length === 0 ? (
+                  {!dish.instructions || dish.instructions.trim().length === 0 ? (
                     <p className="text-xs italic text-slate-400">Chưa hoàn thiện các bước.</p>
                   ) : (
-                    <div className="flex flex-col gap-4">
-                      {instructionRows.map((step, idx) => {
-                        // Check if it starts with numbers, e.g. "1. Step" or "Bước 1."
-                        const stepMatch = step.match(/^(\d+|\w+\s*\d+)\.\s*(.*)/);
-                        const stepNum = stepMatch ? stepMatch[1] : (idx + 1).toString();
-                        const stepText = stepMatch ? stepMatch[2].trim() : step.trim();
-
-                        return (
-                          <div key={idx} className="flex gap-4 items-start pb-4 border-b border-slate-50 last:border-none last:pb-0">
-                            {/* Step Indicator Badge */}
-                            <div className="flex items-center justify-center w-7 h-7 bg-[#FFEAEA] text-[#FF7675] font-extrabold text-xs rounded-full shrink-0">
-                              {stepNum}
-                            </div>
-                            {/* Detailed Instruction Text */}
-                            <p 
-                              className="text-sm text-slate-600 leading-relaxed break-words font-medium pt-0.5"
-                              dangerouslySetInnerHTML={{ __html: parseMarkdown(stepText) }}
-                            />
-                          </div>
-                        );
-                      })}
-                    </div>
+                    <div 
+                      className="text-sm text-slate-600 leading-relaxed break-words font-medium whitespace-pre-wrap pl-1.5"
+                      dangerouslySetInnerHTML={{ __html: parseMarkdown(dish.instructions) }}
+                    />
                   )}
                 </div>
 
