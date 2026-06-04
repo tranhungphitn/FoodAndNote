@@ -26,6 +26,7 @@ export default function ModernTextEditor({
   // Visual state indicators
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
 
   // Check if Bold / Italic is active at the cursor position
   const checkCommandStates = () => {
@@ -113,12 +114,12 @@ export default function ModernTextEditor({
     let markdown = '';
     
     const traverse = (node: Node) => {
-      if (node.nodeType === Node.TEXT_NODE) {
-        markdown += node.nodeValue;
+      if (node.nodeType === 3) { // TEXT_NODE
+        markdown += node.textContent || '';
         return;
       }
       
-      if (node.nodeType === Node.ELEMENT_NODE) {
+      if (node.nodeType === 1) { // ELEMENT_NODE
         const el = node as HTMLElement;
         const tag = el.tagName.toLowerCase();
         
@@ -132,7 +133,7 @@ export default function ModernTextEditor({
           markdown += '*';
         } else if (tag === 'ul') {
           el.childNodes.forEach(child => {
-            if (child.nodeName.toLowerCase() === 'li') {
+            if (child.nodeType === 1 && child.nodeName.toLowerCase() === 'li') {
               markdown += '- ';
               traverse(child);
               markdown += '\n';
@@ -143,7 +144,7 @@ export default function ModernTextEditor({
         } else if (tag === 'ol') {
           let index = 1;
           el.childNodes.forEach(child => {
-            if (child.nodeName.toLowerCase() === 'li') {
+            if (child.nodeType === 1 && child.nodeName.toLowerCase() === 'li') {
               markdown += `${index++}. `;
               traverse(child);
               markdown += '\n';
@@ -188,11 +189,11 @@ export default function ModernTextEditor({
 
   // Update editor innerHTML when external state overrides value (e.g. Form cancel/reset)
   useEffect(() => {
-    if (editorRef.current && value !== lastPropsValueRef.current) {
+    if (editorRef.current && !isFocused && value !== lastPropsValueRef.current) {
       editorRef.current.innerHTML = markdownToHtml(value);
       lastPropsValueRef.current = value;
     }
-  }, [value]);
+  }, [value, isFocused]);
 
   const handleInput = () => {
     if (editorRef.current) {
@@ -354,6 +355,11 @@ export default function ModernTextEditor({
           id={id}
           contentEditable
           onInput={handleInput}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => {
+            setIsFocused(false);
+            handleInput(); // final sync on blur to make sure data is flushed
+          }}
           onKeyUp={checkCommandStates}
           onMouseUp={checkCommandStates}
           data-placeholder={placeholder}

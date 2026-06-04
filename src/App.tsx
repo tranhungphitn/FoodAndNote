@@ -181,8 +181,10 @@ export default function App() {
     isFavorite?: boolean;
     summary?: string;
   }) => {
+    const isEdit = (dishFormMode === 'edit' || dishModalMode === 'edit') && selectedDish;
+
     const targetDish: Dish = {
-      id: (dishFormMode === 'edit' && selectedDish) ? selectedDish.id : `dish-${Date.now()}`,
+      id: isEdit ? selectedDish.id : `dish-${Date.now()}`,
       name: dishData.name,
       category: dishData.category,
       ingredients: dishData.ingredients,
@@ -190,12 +192,12 @@ export default function App() {
       imageUrl: dishData.imageUrl,
       isFavorite: !!dishData.isFavorite,
       summary: dishData.summary || '',
-      createdAt: (dishFormMode === 'edit' && selectedDish) ? (selectedDish.createdAt || new Date().toISOString()) : new Date().toISOString(),
+      createdAt: isEdit ? (selectedDish.createdAt || new Date().toISOString()) : new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };
     
     // Optimistic UI state update
-    if (dishFormMode === 'edit' && selectedDish) {
+    if (isEdit) {
       setDishes(prev => prev.map(d => d.id === selectedDish.id ? targetDish : d));
     } else {
       setDishes(prev => [targetDish, ...prev]);
