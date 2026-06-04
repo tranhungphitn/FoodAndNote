@@ -143,6 +143,9 @@ export default function App() {
     
     if (dishFormMode === 'edit' && selectedDish) {
       targetDish.id = selectedDish.id;
+      targetDish.createdAt = selectedDish.createdAt;
+    } else {
+      targetDish.createdAt = new Date().toISOString();
     }
 
     try {
@@ -179,6 +182,7 @@ export default function App() {
         const newDish: Dish = {
           id: `dish-${Date.now()}`,
           ...dishData,
+          createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString()
         };
         setDishes(prev => [newDish, ...prev]);
@@ -558,7 +562,7 @@ export default function App() {
             <AnimatePresence mode="popLayout">
               {filteredDishes.length > 0 ? (
                 <div className="space-y-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                  <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
                     {paginatedDishes.map((dish) => (
                       <DishCard
                         key={dish.id}
