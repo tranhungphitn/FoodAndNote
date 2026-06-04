@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { X, Check, Camera, ListChecks, HelpCircle, Utensils, Award, BookOpen, Edit, Heart, List, ListOrdered, Type, Bold, Italic } from 'lucide-react';
+import { X, Check, Camera, ListChecks, HelpCircle, Utensils, Award, BookOpen, Edit, Heart } from 'lucide-react';
 import { Dish } from '../types';
 import { PRESET_RECIPE_IMAGES, DISH_CATEGORIES } from '../sampleData';
 import { motion, AnimatePresence } from 'motion/react';
+import ModernTextEditor from './ModernTextEditor';
 
 export interface RecipePresetImage {
   url: string;
@@ -126,53 +127,7 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
     return safe;
   };
 
-  const insertTextAtCursor = (
-    textareaId: string,
-    prefix: string,
-    suffix: string = '',
-    setValue: (val: string) => void
-  ) => {
-    const el = document.getElementById(textareaId) as HTMLTextAreaElement | null;
-    if (!el) return;
-    const start = el.selectionStart;
-    const end = el.selectionEnd;
-    const text = el.value;
-    const selected = text.substring(start, end);
-    const replacement = prefix + selected + suffix;
-    const newVal = text.substring(0, start) + replacement + text.substring(end);
-    setValue(newVal);
-    
-    // Focus back and set selection range
-    setTimeout(() => {
-      el.focus();
-      el.setSelectionRange(start + prefix.length, start + prefix.length + selected.length);
-    }, 10);
-  };
 
-  const insertFormatting = (
-    textareaId: string,
-    marker: string,
-    setValue: (val: string) => void
-  ) => {
-    const el = document.getElementById(textareaId) as HTMLTextAreaElement | null;
-    if (!el) return;
-    const start = el.selectionStart;
-    const end = el.selectionEnd;
-    const text = el.value;
-    const selected = text.substring(start, end);
-    const replacement = marker + selected + marker;
-    const newVal = text.substring(0, start) + replacement + text.substring(end);
-    setValue(newVal);
-    
-    // Focus back and select formatted text
-    setTimeout(() => {
-      el.focus();
-      el.setSelectionRange(
-        start + marker.length,
-        start + marker.length + selected.length
-      );
-    }, 10);
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -570,62 +525,17 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
                       Thành Phần Nguyên Liệu <span className="text-red-500">*</span>
                     </label>
                   </div>
-                  <div className="flex flex-col">
-                    {/* Editor Toolbar */}
-                    <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 border border-b-0 border-slate-200 rounded-t-xl">
-                      <button
-                        type="button"
-                        onClick={() => insertTextAtCursor('dish-ingredients-modal', '- ', '', setIngredients)}
-                        className="px-2 py-1 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-md text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
-                        title="Thêm dấu chấm tròn đầu dòng"
-                      >
-                        <List className="w-3 h-3 text-slate-500" />
-                        <span>Dấu chấm tròn</span>
-                      </button>
-                      <div className="w-[1px] h-3 bg-slate-300 mx-1" />
-                      <button
-                        type="button"
-                        onClick={() => insertFormatting('dish-ingredients-modal', '**', setIngredients)}
-                        className="px-2 py-1 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-md text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
-                        title="Chữ đậm"
-                      >
-                        <Bold className="w-3 h-3 text-slate-500" />
-                        <span>Đậm</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => insertFormatting('dish-ingredients-modal', '*', setIngredients)}
-                        className="px-2 py-1 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-md text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
-                        title="Chữ nghiêng"
-                      >
-                        <Italic className="w-3 h-3 text-slate-500" />
-                        <span>Nghiêng</span>
-                      </button>
-                      <div className="w-[1px] h-3 bg-slate-300 mx-1" />
-                      <button
-                        type="button"
-                        onClick={() => setIngredients(capitalizeFirstLetterOfLines(ingredients))}
-                        className="px-2 py-1 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-md text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
-                        title="Tự động viết hoa đầu dòng"
-                      >
-                        <Type className="w-3 h-3 text-slate-500" />
-                        <span>Viết hoa</span>
-                      </button>
-                    </div>
-                    <textarea
-                      id="dish-ingredients-modal"
-                      placeholder="- 500g cua hoàng đế&#10;- 2 bó rau và mỡ&#10;- 3 củ hành tím..."
-                      value={ingredients}
-                      onChange={(e) => {
-                        setIngredients(e.target.value);
-                        if (errors.ingredients) setErrors(prev => ({ ...prev, ingredients: '' }));
-                      }}
-                      onBlur={() => setIngredients(capitalizeFirstLetterOfLines(ingredients))}
-                      className={`w-full h-44 text-sm text-slate-700 bg-slate-50 border border-t-slate-200 ${
-                        errors.ingredients ? 'border-red-400 ring-2 ring-red-100/50' : 'border-slate-200'
-                      } focus:bg-white rounded-b-xl rounded-t-none p-4 outline-hidden focus:ring-4 focus:ring-[#6366f1]/10 focus:border-[#6366f1] resize-y`}
-                    />
-                  </div>
+                  <ModernTextEditor
+                    id="dish-ingredients-modal"
+                    placeholder="- 500g cua hoàng đế&#10;- 2 bó rau và mỡ&#10;- 3 củ hành tím..."
+                    value={ingredients}
+                    onChange={(val) => {
+                      setIngredients(val);
+                      if (errors.ingredients) setErrors(prev => ({ ...prev, ingredients: '' }));
+                    }}
+                    heightClass="h-44"
+                    error={!!errors.ingredients}
+                  />
                   {errors.ingredients && <span className="text-xs font-semibold text-red-500 mt-1">{errors.ingredients}</span>}
                 </div>
 
@@ -636,62 +546,17 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
                       Quy trình Các Bước Chế Biến <span className="text-red-500">*</span>
                     </label>
                   </div>
-                  <div className="flex flex-col">
-                    {/* Editor Toolbar */}
-                    <div className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 border border-b-0 border-slate-200 rounded-t-xl">
-                      <button
-                        type="button"
-                        onClick={() => insertTextAtCursor('dish-instructions-modal', '1. ', '', setInstructions)}
-                        className="px-2 py-1 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-md text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
-                        title="Thêm số thứ tự bước"
-                      >
-                        <ListOrdered className="w-3 h-3 text-slate-500" />
-                        <span>Thêm bước số</span>
-                      </button>
-                      <div className="w-[1px] h-3 bg-slate-300 mx-1" />
-                      <button
-                        type="button"
-                        onClick={() => insertFormatting('dish-instructions-modal', '**', setInstructions)}
-                        className="px-2 py-1 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-md text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
-                        title="Chữ đậm"
-                      >
-                        <Bold className="w-3 h-3 text-slate-500" />
-                        <span>Đậm</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => insertFormatting('dish-instructions-modal', '*', setInstructions)}
-                        className="px-2 py-1 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-md text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
-                        title="Chữ nghiêng"
-                      >
-                        <Italic className="w-3 h-3 text-slate-500" />
-                        <span>Nghiêng</span>
-                      </button>
-                      <div className="w-[1px] h-3 bg-slate-300 mx-1" />
-                      <button
-                        type="button"
-                        onClick={() => setInstructions(capitalizeFirstLetterOfLines(instructions))}
-                        className="px-2 py-1 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-md text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
-                        title="Tự động viết hoa đầu dòng"
-                      >
-                        <Type className="w-3 h-3 text-slate-500" />
-                        <span>Viết hoa</span>
-                      </button>
-                    </div>
-                    <textarea
-                      id="dish-instructions-modal"
-                      placeholder="1. Làm sạch nguyên liệu cua sạch vị bùn&#10;2. Ướp cùng gia vị nêm đũa...&#10;3. Luộc chín cá đều hai mặt lật nhẹ tay..."
-                      value={instructions}
-                      onChange={(e) => {
-                        setInstructions(e.target.value);
-                        if (errors.instructions) setErrors(prev => ({ ...prev, instructions: '' }));
-                      }}
-                      onBlur={() => setInstructions(capitalizeFirstLetterOfLines(instructions))}
-                      className={`w-full h-48 text-sm text-slate-700 bg-slate-50 border border-t-slate-200 ${
-                        errors.instructions ? 'border-red-400 ring-2 ring-red-100/50' : 'border-slate-200'
-                      } focus:bg-white rounded-b-xl rounded-t-none p-4 outline-hidden focus:ring-4 focus:ring-[#6366f1]/10 focus:border-[#6366f1] resize-y`}
-                    />
-                  </div>
+                  <ModernTextEditor
+                    id="dish-instructions-modal"
+                    placeholder="1. Làm sạch nguyên liệu cua sạch vị bùn&#10;2. Ướp cùng gia vị nêm đũa...&#10;3. Luộc chín cá đều hai mặt lật nhẹ tay..."
+                    value={instructions}
+                    onChange={(val) => {
+                      setInstructions(val);
+                      if (errors.instructions) setErrors(prev => ({ ...prev, instructions: '' }));
+                    }}
+                    heightClass="h-48"
+                    error={!!errors.instructions}
+                  />
                   {errors.instructions && <span className="text-xs font-semibold text-red-500 mt-1">{errors.instructions}</span>}
                 </div>
 

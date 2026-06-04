@@ -658,7 +658,7 @@ service cloud.firestore {
               id="desktop-tab-notes"
             >
               <Notebook className="w-4 h-4" />
-              Sổ Tay Ghi Chú ({totalNotesCount})
+              Ghi Chú ({totalNotesCount})
             </button>
           </div>
 

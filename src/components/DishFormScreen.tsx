@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Check, Camera, ListChecks, Utensils, BookOpen, List, ListOrdered, Type, Bold, Italic } from 'lucide-react';
+import { ArrowLeft, Check, Camera, ListChecks, Utensils, BookOpen } from 'lucide-react';
 import { Dish } from '../types';
 import { PRESET_RECIPE_IMAGES, DISH_CATEGORIES } from '../sampleData';
 import { motion } from 'motion/react';
+import ModernTextEditor from './ModernTextEditor';
 
 interface DishFormScreenProps {
   dish: Dish | null;
@@ -90,53 +91,7 @@ export default function DishFormScreen({ dish, mode, onSave, onCancel }: DishFor
       .join('\n');
   };
 
-  const insertTextAtCursor = (
-    textareaId: string,
-    prefix: string,
-    suffix: string = '',
-    setValue: (val: string) => void
-  ) => {
-    const el = document.getElementById(textareaId) as HTMLTextAreaElement | null;
-    if (!el) return;
-    const start = el.selectionStart;
-    const end = el.selectionEnd;
-    const text = el.value;
-    const selected = text.substring(start, end);
-    const replacement = prefix + selected + suffix;
-    const newVal = text.substring(0, start) + replacement + text.substring(end);
-    setValue(newVal);
-    
-    // Focus back and set selection range
-    setTimeout(() => {
-      el.focus();
-      el.setSelectionRange(start + prefix.length, start + prefix.length + selected.length);
-    }, 10);
-  };
 
-  const insertFormatting = (
-    textareaId: string,
-    marker: string,
-    setValue: (val: string) => void
-  ) => {
-    const el = document.getElementById(textareaId) as HTMLTextAreaElement | null;
-    if (!el) return;
-    const start = el.selectionStart;
-    const end = el.selectionEnd;
-    const text = el.value;
-    const selected = text.substring(start, end);
-    const replacement = marker + selected + marker;
-    const newVal = text.substring(0, start) + replacement + text.substring(end);
-    setValue(newVal);
-    
-    // Focus back and select formatted text
-    setTimeout(() => {
-      el.focus();
-      el.setSelectionRange(
-        start + marker.length,
-        start + marker.length + selected.length
-      );
-    }, 10);
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -372,62 +327,17 @@ export default function DishFormScreen({ dish, mode, onSave, onCancel }: DishFor
                   Danh sách chi tiết <span className="text-red-500 font-extrabold">*</span>
                 </label>
               </div>
-              <div className="flex flex-col">
-                {/* Editor Toolbar */}
-                <div className="flex items-center gap-1.5 px-3 py-2 bg-slate-100 border border-b-0 border-slate-200 rounded-t-2xl">
-                  <button
-                    type="button"
-                    onClick={() => insertTextAtCursor('dish-ingredients', '- ', '', setIngredients)}
-                    className="px-2.5 py-1.5 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
-                    title="Thêm dấu chấm tròn đầu dòng"
-                  >
-                    <List className="w-3.5 h-3.5 text-slate-500" />
-                    <span>Dấu chấm tròn</span>
-                  </button>
-                  <div className="w-[1px] h-4 bg-slate-300 mx-1" />
-                  <button
-                    type="button"
-                    onClick={() => insertFormatting('dish-ingredients', '**', setIngredients)}
-                    className="px-2.5 py-1.5 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
-                    title="Chữ đậm"
-                  >
-                    <Bold className="w-3.5 h-3.5 text-slate-500" />
-                    <span>Đậm</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => insertFormatting('dish-ingredients', '*', setIngredients)}
-                    className="px-2.5 py-1.5 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
-                    title="Chữ nghiêng"
-                  >
-                    <Italic className="w-3.5 h-3.5 text-slate-500" />
-                    <span>Nghiêng</span>
-                  </button>
-                  <div className="w-[1px] h-4 bg-slate-300 mx-1" />
-                  <button
-                    type="button"
-                    onClick={() => setIngredients(capitalizeFirstLetterOfLines(ingredients))}
-                    className="px-2.5 py-1.5 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
-                    title="Tự động viết hoa đầu dòng"
-                  >
-                    <Type className="w-3.5 h-3.5 text-slate-500" />
-                    <span>Viết hoa đầu dòng</span>
-                  </button>
-                </div>
-                <textarea
-                  id="dish-ingredients"
-                  placeholder="- 500g cua hoàng đế hoặc thịt heo ngon&#10;- 2 bó hành hoa tỏi tây&#10;- 1 chai nước mắm cốt nhĩ..."
-                  value={ingredients}
-                  onChange={(e) => {
-                    setIngredients(e.target.value);
-                    if (errors.ingredients) setErrors(prev => ({ ...prev, ingredients: '' }));
-                  }}
-                  onBlur={() => setIngredients(capitalizeFirstLetterOfLines(ingredients))}
-                  className={`w-full h-52 text-sm text-slate-700 bg-slate-50 border border-t-slate-200 ${
-                    errors.ingredients ? 'border-red-400 ring-2 ring-red-100/50' : 'border-slate-200'
-                  } focus:bg-white rounded-b-2xl rounded-t-none p-5 outline-hidden focus:ring-4 focus:ring-[#FF7675]/10 focus:border-[#FF7675] resize-y transition-all font-mono`}
-                />
-              </div>
+              <ModernTextEditor
+                id="dish-ingredients"
+                placeholder="- 500g cua hoàng đế hoặc thịt heo ngon&#10;- 2 bó hành hoa tỏi tây&#10;- 1 chai nước mắm cốt nhĩ..."
+                value={ingredients}
+                onChange={(val) => {
+                  setIngredients(val);
+                  if (errors.ingredients) setErrors(prev => ({ ...prev, ingredients: '' }));
+                }}
+                heightClass="h-52"
+                error={!!errors.ingredients}
+              />
               {errors.ingredients && <span className="text-xs font-semibold text-red-500 mt-1">{errors.ingredients}</span>}
             </div>
 
@@ -444,62 +354,17 @@ export default function DishFormScreen({ dish, mode, onSave, onCancel }: DishFor
                   Cách thực hiện từng bước <span className="text-red-500 font-extrabold">*</span>
                 </label>
               </div>
-              <div className="flex flex-col">
-                {/* Editor Toolbar */}
-                <div className="flex items-center gap-1.5 px-3 py-2 bg-slate-100 border border-b-0 border-slate-200 rounded-t-2xl">
-                  <button
-                    type="button"
-                    onClick={() => insertTextAtCursor('dish-instructions', '1. ', '', setInstructions)}
-                    className="px-2.5 py-1.5 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
-                    title="Thêm số thứ tự bước"
-                  >
-                    <ListOrdered className="w-3.5 h-3.5 text-slate-500" />
-                    <span>Thêm bước số</span>
-                  </button>
-                  <div className="w-[1px] h-4 bg-slate-300 mx-1" />
-                  <button
-                    type="button"
-                    onClick={() => insertFormatting('dish-instructions', '**', setInstructions)}
-                    className="px-2.5 py-1.5 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
-                    title="Chữ đậm"
-                  >
-                    <Bold className="w-3.5 h-3.5 text-slate-500" />
-                    <span>Đậm</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => insertFormatting('dish-instructions', '*', setInstructions)}
-                    className="px-2.5 py-1.5 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
-                    title="Chữ nghiêng"
-                  >
-                    <Italic className="w-3.5 h-3.5 text-slate-500" />
-                    <span>Nghiêng</span>
-                  </button>
-                  <div className="w-[1px] h-4 bg-slate-300 mx-1" />
-                  <button
-                    type="button"
-                    onClick={() => setInstructions(capitalizeFirstLetterOfLines(instructions))}
-                    className="px-2.5 py-1.5 hover:bg-slate-200 text-slate-700 hover:text-slate-900 rounded-lg text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
-                    title="Tự động viết hoa đầu dòng"
-                  >
-                    <Type className="w-3.5 h-3.5 text-slate-500" />
-                    <span>Viết hoa đầu dòng</span>
-                  </button>
-                </div>
-                <textarea
-                  id="dish-instructions"
-                  placeholder="1. Sơ chế làm sạch cua ghẹ thật sạch rồi luộc qua gừng thơm...&#10;2. Ướp tẩm cùng nước mắm tỏi hành băm..."
-                  value={instructions}
-                  onChange={(e) => {
-                    setInstructions(e.target.value);
-                    if (errors.instructions) setErrors(prev => ({ ...prev, instructions: '' }));
-                  }}
-                  onBlur={() => setInstructions(capitalizeFirstLetterOfLines(instructions))}
-                  className={`w-full h-64 text-sm text-slate-700 bg-slate-50 border border-t-slate-200 ${
-                    errors.instructions ? 'border-red-400 ring-2 ring-red-100/50' : 'border-slate-200'
-                  } focus:bg-white rounded-b-2xl rounded-t-none p-5 outline-hidden focus:ring-4 focus:ring-[#FF7675]/10 focus:border-[#FF7675] resize-y transition-all`}
-                />
-              </div>
+              <ModernTextEditor
+                id="dish-instructions"
+                placeholder="1. Sơ chế làm sạch cua ghẹ thật sạch rồi luộc qua gừng thơm...&#10;2. Ướp tẩm cùng nước mắm tỏi hành băm..."
+                value={instructions}
+                onChange={(val) => {
+                  setInstructions(val);
+                  if (errors.instructions) setErrors(prev => ({ ...prev, instructions: '' }));
+                }}
+                heightClass="h-64"
+                error={!!errors.instructions}
+              />
               {errors.instructions && <span className="text-xs font-semibold text-red-500 mt-1">{errors.instructions}</span>}
             </div>
           </div>
