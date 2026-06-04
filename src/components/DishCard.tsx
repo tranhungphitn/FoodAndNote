@@ -53,7 +53,10 @@ export default function DishCard({ dish, onViewDetails, onEdit, onDelete, onTogg
       id={`dish-card-${dish.id}`}
     >
       {/* Visual Header / Cover Photo */}
-      <div className="relative h-28 sm:h-44 w-full overflow-hidden bg-slate-100 shrink-0">
+      <div 
+        onClick={() => onViewDetails(dish)}
+        className="relative h-28 sm:h-44 w-full overflow-hidden bg-slate-100 shrink-0 cursor-pointer"
+      >
         <img
           src={itemImage}
           alt={dish.name}
