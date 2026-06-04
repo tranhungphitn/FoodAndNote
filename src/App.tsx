@@ -289,7 +289,11 @@ export default function App() {
   };
 
   const handleToggleFavoriteDish = async (dish: Dish) => {
-    const updatedDish = { ...dish, isFavorite: !dish.isFavorite };
+    const updatedDish = { 
+      ...dish, 
+      isFavorite: !dish.isFavorite,
+      updatedAt: new Date().toISOString()
+    };
     setDishes(prev => prev.map(d => d.id === dish.id ? updatedDish : d));
     try {
       await setDoc(doc(db, 'dishes', dish.id), updatedDish);
@@ -430,7 +434,7 @@ export default function App() {
     }
   };
 
-  // Recipe filtration and sorting logic (Favorite first, then sorted by newest updatedAt)
+  // Recipe filtration and sorting logic (Recently updated and Favorite dishes go first)
   const filteredDishes = dishes
     .filter(dish => {
       return dish.name.toLowerCase().includes(dishSearch.toLowerCase()) || 
@@ -438,12 +442,26 @@ export default function App() {
              dish.category.toLowerCase().includes(dishSearch.toLowerCase());
     })
     .sort((a, b) => {
-      const favA = a.isFavorite ? 1 : 0;
-      const favB = b.isFavorite ? 1 : 0;
-      if (favA !== favB) {
-        return favB - favA; // Favorite (1) before non-favorite (0)
+      const timeA = new Date(a.updatedAt).getTime();
+      const timeB = new Date(b.updatedAt).getTime();
+      const now = Date.now();
+      const threshold = 24 * 60 * 60 * 1000; // 24 hours
+      
+      const isRecentA = (now - timeA) < threshold;
+      const isRecentB = (now - timeB) < threshold;
+      
+      // Calculate weight based on Recency and Favorite status
+      // Group 1 (both): weight 3
+      // Group 2 (recent only): weight 2
+      // Group 3 (favorite only): weight 1
+      // Group 4 (none): weight 0
+      const weightA = (isRecentA ? 2 : 0) + (a.isFavorite ? 1 : 0);
+      const weightB = (isRecentB ? 2 : 0) + (b.isFavorite ? 1 : 0);
+      
+      if (weightA !== weightB) {
+        return weightB - weightA; // Higher weight first
       }
-      return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(); // Newest first
+      return timeB - timeA; // Newest first within same weight group
     });
 
   // Search suggestions list based on current dish search keyword (limits to 5)
