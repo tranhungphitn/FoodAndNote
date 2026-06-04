@@ -420,12 +420,14 @@ export default function App() {
 
   if (!userRole) {
     return (
-      <div className="min-h-screen bg-slate-100 flex items-center justify-center p-4 font-sans relative overflow-hidden bg-gradient-to-tr from-[#f1f2f6] via-slate-50 to-[#e8e9f5]">
-        {/* Decorative background shapes */}
-        <div className="absolute top-[-10%] right-[-10%] w-96 h-96 bg-[#4834D4]/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-[-10%] left-[-10%] w-96 h-96 bg-[#FF7675]/10 rounded-full blur-3xl pointer-events-none" />
+      <div 
+        className="min-h-screen flex items-center justify-center p-4 font-sans relative overflow-hidden bg-cover bg-center"
+        style={{ backgroundImage: 'url(/login_bg.png)' }}
+      >
+        {/* Dark overlay for rich contrast */}
+        <div className="absolute inset-0 bg-slate-950/45 backdrop-blur-xs pointer-events-none" />
 
-        <div className="w-full max-w-md bg-white/80 backdrop-blur-xl rounded-3xl p-8 border border-white/20 shadow-2xl flex flex-col items-center gap-6 relative z-10">
+        <div className="w-full max-w-md bg-white/90 backdrop-blur-xl rounded-3xl p-8 border border-white/30 shadow-2xl flex flex-col items-center gap-6 relative z-10">
           <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-[#4834D4] via-[#686DE0] to-[#E056FD] p-0.5 shadow-lg overflow-hidden flex items-center justify-center">
             <img src="/avatar.png" alt="Leo's Ghi Chú Logo" className="w-full h-full object-cover rounded-xl" />
           </div>

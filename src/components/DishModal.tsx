@@ -169,7 +169,7 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 120 }}
           transition={{ type: 'spring', damping: 25, stiffness: 350 }}
-          className="relative w-full sm:max-w-2xl h-[92vh] sm:h-[85vh] max-h-[95vh] bg-white rounded-t-[32px] sm:rounded-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100"
+          className="relative w-full sm:max-w-3xl h-[92vh] sm:h-[85vh] max-h-[95vh] bg-white rounded-t-[32px] sm:rounded-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100"
           id="dish-modal"
         >
           {/* Cover Hero Banner Image in View Mode */}
