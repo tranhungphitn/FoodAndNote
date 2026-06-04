@@ -50,6 +50,7 @@ export default function App() {
   const [dishes, setDishes] = useState<Dish[]>([]);
   const [notes, setNotes] = useState<Note[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [syncError, setSyncError] = useState<string | null>(null);
 
   // Load from Firebase Firestore on mount
   useEffect(() => {
@@ -82,8 +83,10 @@ export default function App() {
           setDishes(fetchedDishes);
           setNotes(fetchedNotes);
         }
-      } catch (err) {
+        setSyncError(null);
+      } catch (err: any) {
         console.error('Failed to connect to Firebase Firestore, falling back to offline cache:', err);
+        setSyncError(`Lỗi kết nối Firebase (đang dùng Offline Cache): ${err.message || err}`);
         const localDishes = localStorage.getItem('sotay_dishes');
         const localNotes = localStorage.getItem('sotay_notes');
         setDishes(localDishes ? JSON.parse(localDishes) : SAMPLE_DISHES);
@@ -173,8 +176,10 @@ export default function App() {
 
     try {
       await setDoc(doc(db, 'dishes', targetDish.id), targetDish);
-    } catch (err) {
+      setSyncError(null);
+    } catch (err: any) {
       console.error('Failed to save dish to Firestore:', err);
+      setSyncError(`Không thể lưu món ăn lên Firebase: ${err.message || err}`);
     }
 
     setDishFormMode(null);
@@ -190,8 +195,10 @@ export default function App() {
 
     try {
       await deleteDoc(doc(db, 'dishes', id));
-    } catch (err) {
+      setSyncError(null);
+    } catch (err: any) {
       console.error('Failed to sync deletion to Firestore:', err);
+      setSyncError(`Không thể xóa món ăn trên Firebase: ${err.message || err}`);
     }
   };
 
@@ -200,8 +207,10 @@ export default function App() {
     setDishes(prev => prev.map(d => d.id === dish.id ? updatedDish : d));
     try {
       await setDoc(doc(db, 'dishes', dish.id), updatedDish);
-    } catch (err) {
+      setSyncError(null);
+    } catch (err: any) {
       console.error('Failed to sync favorite status to Firestore:', err);
+      setSyncError(`Không thể cập nhật yêu thích trên Firebase: ${err.message || err}`);
     }
   };
 
@@ -257,8 +266,10 @@ export default function App() {
 
     try {
       await setDoc(doc(db, 'notes', targetNote.id), targetNote);
-    } catch (err) {
+      setSyncError(null);
+    } catch (err: any) {
       console.error('Failed to save note to Firestore:', err);
+      setSyncError(`Không thể lưu ghi chú lên Firebase: ${err.message || err}`);
     }
     setIsNoteModalOpen(false);
     setSelectedNote(null);
@@ -268,8 +279,10 @@ export default function App() {
     setNotes(prev => prev.filter(n => n.id !== id));
     try {
       await deleteDoc(doc(db, 'notes', id));
-    } catch (err) {
+      setSyncError(null);
+    } catch (err: any) {
       console.error('Failed to sync note delete to Firestore:', err);
+      setSyncError(`Không thể xóa ghi chú trên Firebase: ${err.message || err}`);
     }
   };
 
@@ -316,8 +329,10 @@ export default function App() {
 
     try {
       await setDoc(doc(db, 'notes', id), updatedNote);
-    } catch (err) {
+      setSyncError(null);
+    } catch (err: any) {
       console.error('Failed to sync pin toggle to Firestore:', err);
+      setSyncError(`Không thể ghim ghi chú trên Firebase: ${err.message || err}`);
     }
   };
 
@@ -428,6 +443,50 @@ export default function App() {
 
       {/* 2. Main Content Container block */}
       <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-6">
+        
+        {syncError && (
+          <div className="mb-6 p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-2xl flex items-start gap-3 shadow-xs">
+            <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+            <div className="flex-1 text-sm font-medium">
+              <p className="font-bold text-amber-950">Lỗi đồng bộ Firebase (Ghi chú được lưu tạm thời trên trình duyệt của bạn)</p>
+              <p className="opacity-90 mt-1">{syncError}</p>
+              <div className="text-xs text-amber-800/80 mt-2 space-y-1">
+                <p>Vì ứng dụng có cơ chế Offline Cache, các thay đổi vẫn được cập nhật tạm thời tại giao diện, nhưng <strong>chưa đồng bộ được lên cơ sở dữ liệu Firebase</strong>.</p>
+                <p className="font-semibold text-amber-950 mt-2">Cách khắc phục:</p>
+                <ul className="list-disc pl-4 space-y-0.5">
+                  <li>
+                    <strong>Bước 1:</strong> Truy cập vào <strong>Firebase Console</strong> -&gt; Chọn dự án <strong>foodandnote</strong>.
+                  </li>
+                  <li>
+                    <strong>Bước 2:</strong> Vào mục <strong>Firestore Database</strong> ở cột trái -&gt; Chọn tab <strong>Rules</strong> ở trên cùng.
+                  </li>
+                  <li>
+                    <strong>Bước 3:</strong> Thay đổi cấu hình Rules thành:
+                    <pre className="bg-amber-100/60 p-2 rounded-lg mt-1 text-[11px] font-mono border border-amber-200/50">
+{`rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}`}
+                    </pre>
+                  </li>
+                  <li>
+                    <strong>Bước 4:</strong> Bấm nút <strong>Publish</strong> màu xanh để lưu lại.
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <button 
+              onClick={() => setSyncError(null)}
+              className="text-amber-500 hover:text-amber-700 font-bold px-2 py-0.5 rounded-lg hover:bg-amber-100/50 transition-colors cursor-pointer"
+            >
+              Đóng
+            </button>
+          </div>
+        )}
         
         {/* Desktop Quick Nav Tabs (Hidden on mobile as it relies on Native Bottom Bar) */}
         <div className="hidden sm:flex items-center justify-between border-b border-slate-200 pb-4 mb-6 font-sans">
