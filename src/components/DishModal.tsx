@@ -169,7 +169,7 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 120 }}
           transition={{ type: 'spring', damping: 25, stiffness: 350 }}
-          className="relative w-full sm:max-w-3xl h-[92vh] sm:h-[85vh] max-h-[95vh] bg-white rounded-t-[32px] sm:rounded-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100"
+          className="relative w-full sm:max-w-4xl h-[92vh] sm:h-[85vh] max-h-[95vh] bg-white rounded-t-[32px] sm:rounded-[28px] shadow-2xl flex flex-col overflow-hidden border border-slate-100"
           id="dish-modal"
         >
           {/* Cover Hero Banner Image in View Mode */}
@@ -241,11 +241,7 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
             {/* VIEW MODE DETAILS PANEL */}
             {mode === 'view' && dish && (
               <div className="space-y-6">
-                {dish.summary && (
-                  <div className="bg-amber-50/40 border border-amber-100/70 p-4.5 rounded-2xl text-sm font-semibold text-amber-900/80 leading-relaxed italic">
-                    💡 {dish.summary}
-                  </div>
-                )}
+
                  {/* 1. Ingredients section as a simple static list */}
                  <div className="bg-slate-50/80 rounded-2xl p-5 border border-slate-100">
                    <div className="flex items-center gap-2 mb-3 border-b border-slate-200 pb-2.5">
