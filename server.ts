@@ -101,6 +101,7 @@ async function startServer() {
         ingredients: dishData.ingredients || '',
         instructions: dishData.instructions || '',
         imageUrl: dishData.imageUrl || '',
+        isFavorite: !!dishData.isFavorite,
         updatedAt: new Date().toISOString()
       };
       dishes.unshift(newDish);

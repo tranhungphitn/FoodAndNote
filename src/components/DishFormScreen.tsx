@@ -13,6 +13,7 @@ interface DishFormScreenProps {
     ingredients: string;
     instructions: string;
     imageUrl: string;
+    isFavorite: boolean;
   }) => void;
   onCancel: () => void;
 }
@@ -23,6 +24,7 @@ export default function DishFormScreen({ dish, mode, onSave, onCancel }: DishFor
   const [ingredients, setIngredients] = useState('');
   const [instructions, setInstructions] = useState('');
   const [imageUrl, setImageUrl] = useState('');
+  const [isFavorite, setIsFavorite] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
@@ -33,6 +35,7 @@ export default function DishFormScreen({ dish, mode, onSave, onCancel }: DishFor
       setIngredients('');
       setInstructions('');
       setImageUrl('');
+      setIsFavorite(false);
       setErrors({});
     } else if (dish) {
       setName(dish.name);
@@ -40,6 +43,7 @@ export default function DishFormScreen({ dish, mode, onSave, onCancel }: DishFor
       setIngredients(dish.ingredients);
       setInstructions(dish.instructions);
       setImageUrl(dish.imageUrl);
+      setIsFavorite(dish.isFavorite || false);
       setErrors({});
     }
   }, [dish, mode]);
@@ -112,6 +116,7 @@ export default function DishFormScreen({ dish, mode, onSave, onCancel }: DishFor
       ingredients: formattedIngredients,
       instructions: formattedInstructions,
       imageUrl: imageUrl.trim(),
+      isFavorite,
     });
   };
 
@@ -212,6 +217,23 @@ export default function DishFormScreen({ dish, mode, onSave, onCancel }: DishFor
                     </div>
                   </div>
                   {errors.category && <span className="text-xs font-semibold text-red-500 mt-1">{errors.category}</span>}
+                </div>
+
+                {/* C. Favorite Toggle Switch */}
+                <div className="flex items-center justify-between p-4 bg-slate-50 border border-slate-200/60 rounded-2xl mt-2">
+                  <div className="flex flex-col">
+                    <span className="text-xs font-black text-slate-700 uppercase tracking-wider">Món ăn yêu thích</span>
+                    <span className="text-[10px] text-slate-400 font-medium">Đánh dấu món ăn này vào danh sách yêu thích</span>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input 
+                      type="checkbox" 
+                      checked={isFavorite} 
+                      onChange={(e) => setIsFavorite(e.target.checked)}
+                      className="sr-only peer"
+                    />
+                    <div className="w-11 h-6 bg-slate-200 peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#FF7675]"></div>
+                  </label>
                 </div>
               </div>
 

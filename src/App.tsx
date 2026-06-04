@@ -200,6 +200,22 @@ export default function App() {
     }
   };
 
+  const handleToggleFavoriteDish = async (dish: Dish) => {
+    const updatedDish = { ...dish, isFavorite: !dish.isFavorite };
+    setDishes(prev => prev.map(d => d.id === dish.id ? updatedDish : d));
+    try {
+      await fetch('/api/dishes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updatedDish)
+      });
+    } catch (err) {
+      console.error('Failed to sync favorite status to server:', err);
+    }
+  };
+
   const requestDeleteDish = (id: string) => {
     const item = dishes.find(d => d.id === id);
     if (item) {
@@ -537,6 +553,7 @@ export default function App() {
                         onViewDetails={handleViewDishDetails}
                         onEdit={handleOpenEditDish}
                         onDelete={requestDeleteDish}
+                        onToggleFavorite={handleToggleFavoriteDish}
                       />
                     ))}
                   </div>

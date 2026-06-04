@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChefHat, Trash2, Edit, Eye, ListChecks } from 'lucide-react';
+import { Heart, Trash2, Edit, Eye, ListChecks } from 'lucide-react';
 import { Dish } from '../types';
 import { motion } from 'motion/react';
 
@@ -9,9 +9,10 @@ interface DishCardProps {
   onViewDetails: (dish: Dish) => void;
   onEdit: (dish: Dish) => void;
   onDelete: (id: string) => void;
+  onToggleFavorite: (dish: Dish) => void;
 }
 
-export default function DishCard({ dish, onViewDetails, onEdit, onDelete }: DishCardProps) {
+export default function DishCard({ dish, onViewDetails, onEdit, onDelete, onToggleFavorite }: DishCardProps) {
   // Simple check helper for fallback images
   const itemImage = dish.imageUrl || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80';
 
@@ -118,11 +119,25 @@ export default function DishCard({ dish, onViewDetails, onEdit, onDelete }: Dish
         </div>
 
         {/* Footer click actions */}
-        <div className="border-t border-slate-50 pt-4 flex items-center justify-between mt-auto">
-          <div className="flex items-center gap-1.5 text-[11px] text-slate-400 font-bold">
-            <ChefHat className="w-3.5 h-3.5 text-slate-300 animate-pulse" />
-            <span className="uppercase tracking-widest text-[9px]">Công thức</span>
-          </div>
+        <div className="border-t border-slate-50 pt-3 flex items-center justify-between mt-auto">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleFavorite(dish);
+            }}
+            type="button"
+            className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl hover:bg-slate-50 transition-all duration-200 cursor-pointer"
+            title={dish.isFavorite ? "Bỏ yêu thích" : "Yêu thích món ăn"}
+            id={`btn-fav-toggle-dish-${dish.id}`}
+          >
+            <Heart 
+              className={`w-5 h-5 transition-all duration-200 active:scale-125 ${
+                dish.isFavorite 
+                  ? 'fill-[#FF7675] text-[#FF7675]' 
+                  : 'text-slate-300 hover:text-[#FF7675]'
+              }`} 
+            />
+          </button>
 
           <button
             onClick={() => onViewDetails(dish)}
