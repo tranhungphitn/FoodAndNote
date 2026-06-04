@@ -135,7 +135,7 @@ export default function ModernTextEditor({
           el.childNodes.forEach(child => {
             if (child.nodeType === 1 && child.nodeName.toLowerCase() === 'li') {
               markdown += '- ';
-              traverse(child);
+              child.childNodes.forEach(traverse);
               markdown += '\n';
             } else {
               traverse(child);
@@ -146,7 +146,7 @@ export default function ModernTextEditor({
           el.childNodes.forEach(child => {
             if (child.nodeType === 1 && child.nodeName.toLowerCase() === 'li') {
               markdown += `${index++}. `;
-              traverse(child);
+              child.childNodes.forEach(traverse);
               markdown += '\n';
             } else {
               traverse(child);
