@@ -100,6 +100,7 @@ export default function App() {
 
   // Search & Filter State
   const [dishSearch, setDishSearch] = useState('');
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const [noteSearch, setNoteSearch] = useState('');
   const [currentDishPage, setCurrentDishPage] = useState(1);
 
@@ -352,6 +353,13 @@ export default function App() {
       return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(); // Newest first
     });
 
+  // Search suggestions list based on current dish search keyword (limits to 5)
+  const searchSuggestions = dishSearch.trim()
+    ? dishes
+        .filter(dish => dish.name.toLowerCase().includes(dishSearch.toLowerCase()))
+        .slice(0, 5)
+    : [];
+
   // Pagination config
   const ITEMS_PER_PAGE = 8;
   const totalDishPages = Math.ceil(filteredDishes.length / ITEMS_PER_PAGE);
@@ -543,17 +551,74 @@ service cloud.firestore {
                   type="text"
                   placeholder="Tìm kiếm món ngon theo tên, nguyên liệu, phân loại..."
                   value={dishSearch}
-                  onChange={(e) => setDishSearch(e.target.value)}
+                  onChange={(e) => {
+                    setDishSearch(e.target.value);
+                    setShowSuggestions(true);
+                  }}
+                  onFocus={() => setShowSuggestions(true)}
                   className="w-full text-sm placeholder-slate-400 bg-slate-50 border border-slate-200 rounded-2xl pl-12 pr-10 py-3.5 focus:bg-white focus:outline-hidden focus:ring-4 focus:ring-[#4834D4]/10 focus:border-[#4834D4] font-medium"
                   id="dish-search-input"
                 />
                 {dishSearch && (
                   <button
-                    onClick={() => setDishSearch('')}
+                    onClick={() => {
+                      setDishSearch('');
+                      setShowSuggestions(false);
+                    }}
                     className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 font-bold text-xs px-2 py-1 hover:bg-slate-100 rounded-md transition-colors"
                   >
                     Xóa
                   </button>
+                )}
+
+                {/* Search Suggestions Dropdown Overlay */}
+                {showSuggestions && searchSuggestions.length > 0 && (
+                  <>
+                    <div 
+                      className="fixed inset-0 z-10" 
+                      onClick={() => setShowSuggestions(false)}
+                    />
+                    <div className="absolute left-0 right-0 top-full mt-2 bg-white border border-slate-200 rounded-2xl shadow-xl z-20 overflow-hidden divide-y divide-slate-100">
+                      {searchSuggestions.map((dish) => (
+                        <div 
+                          key={dish.id}
+                          className="flex items-center justify-between p-3 hover:bg-slate-50 cursor-pointer transition-colors duration-150"
+                          onClick={() => {
+                            setDishSearch(dish.name);
+                            setShowSuggestions(false);
+                          }}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-xl overflow-hidden bg-slate-100 shrink-0">
+                              <img 
+                                src={dish.imageUrl || 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?auto=format&fit=crop&q=80&w=150'} 
+                                alt={dish.name} 
+                                className="w-full h-full object-cover"
+                              />
+                            </div>
+                            <div className="text-left">
+                              <p className="text-sm font-bold text-slate-800">{dish.name}</p>
+                              <span className="inline-block text-[10px] text-[#FF7675] font-bold bg-red-50 px-2 py-0.5 rounded-md mt-0.5">
+                                {dish.category}
+                              </span>
+                            </div>
+                          </div>
+                          
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleViewDishDetails(dish);
+                              setShowSuggestions(false);
+                            }}
+                            className="text-xs font-bold text-[#4834D4] hover:bg-[#4834D4]/5 px-3 py-1.5 rounded-xl transition-colors shrink-0"
+                          >
+                            Xem nhanh
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </>
                 )}
               </div>
 
