@@ -517,7 +517,7 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
                       if (errors.ingredients) setErrors(prev => ({ ...prev, ingredients: '' }));
                     }}
                     onBlur={() => setIngredients(capitalizeFirstLetterOfLines(ingredients))}
-                    className={`w-full h-28 text-sm text-slate-700 bg-slate-50 border ${
+                    className={`w-full h-36 text-sm text-slate-700 bg-slate-50 border ${
                       errors.ingredients ? 'border-red-400 ring-2 ring-red-100/50' : 'border-slate-200'
                     } focus:bg-white rounded-xl p-4 outline-hidden focus:ring-4 focus:ring-[#4834D4]/10 focus:border-[#4834D4] resize-y`}
                   />
@@ -541,7 +541,7 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
                       if (errors.instructions) setErrors(prev => ({ ...prev, instructions: '' }));
                     }}
                     onBlur={() => setInstructions(capitalizeFirstLetterOfLines(instructions))}
-                    className={`w-full h-32 text-sm text-slate-700 bg-slate-50 border ${
+                    className={`w-full h-40 text-sm text-slate-700 bg-slate-50 border ${
                       errors.instructions ? 'border-red-400 ring-2 ring-red-100/50' : 'border-slate-200'
                     } focus:bg-white rounded-xl p-4 outline-hidden focus:ring-4 focus:ring-[#4834D4]/10 focus:border-[#4834D4] resize-y`}
                   />

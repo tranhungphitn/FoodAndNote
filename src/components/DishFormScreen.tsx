@@ -336,7 +336,7 @@ export default function DishFormScreen({ dish, mode, onSave, onCancel }: DishFor
                   if (errors.ingredients) setErrors(prev => ({ ...prev, ingredients: '' }));
                 }}
                 onBlur={() => setIngredients(capitalizeFirstLetterOfLines(ingredients))}
-                className={`w-full h-36 text-sm text-slate-700 bg-slate-50 border ${
+                className={`w-full h-44 text-sm text-slate-700 bg-slate-50 border ${
                   errors.ingredients ? 'border-red-400 ring-2 ring-red-100/50' : 'border-slate-200'
                 } focus:bg-white rounded-2xl p-5 outline-hidden focus:ring-4 focus:ring-[#FF7675]/10 focus:border-[#FF7675] resize-y transition-all font-mono`}
               />
@@ -367,7 +367,7 @@ export default function DishFormScreen({ dish, mode, onSave, onCancel }: DishFor
                   if (errors.instructions) setErrors(prev => ({ ...prev, instructions: '' }));
                 }}
                 onBlur={() => setInstructions(capitalizeFirstLetterOfLines(instructions))}
-                className={`w-full h-44 text-sm text-slate-700 bg-slate-50 border ${
+                className={`w-full h-56 text-sm text-slate-700 bg-slate-50 border ${
                   errors.instructions ? 'border-red-400 ring-2 ring-red-100/50' : 'border-slate-200'
                 } focus:bg-white rounded-2xl p-5 outline-hidden focus:ring-4 focus:ring-[#FF7675]/10 focus:border-[#FF7675] resize-y transition-all`}
               />
