@@ -424,11 +424,11 @@ export default function App() {
         className="min-h-screen flex items-center justify-center p-4 font-sans relative overflow-hidden bg-cover bg-center"
         style={{ backgroundImage: 'url(/login_bg.png)' }}
       >
-        {/* Dark overlay */}
-        <div className="absolute inset-0 bg-black/50 backdrop-blur-sm pointer-events-none" />
+        {/* Soft overlay */}
+        <div className="absolute inset-0 bg-black/30 backdrop-blur-xs pointer-events-none" />
 
         <div className="w-full max-w-md glass-strong rounded-3xl p-8 flex flex-col items-center gap-6 relative z-10">
-          <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-[#4834D4] via-[#686DE0] to-[#E056FD] p-0.5 shadow-lg overflow-hidden flex items-center justify-center">
+          <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-[#6366f1] via-[#8b5cf6] to-[#ec4899] p-0.5 shadow-lg overflow-hidden flex items-center justify-center">
             <img src="/avatar.png" alt="Leo's Ghi Chú Logo" className="w-full h-full object-cover rounded-xl" />
           </div>
           
@@ -438,7 +438,7 @@ export default function App() {
           </div>
 
           {/* Toggle buttons for Login Mode */}
-          <div className="w-full p-1 rounded-2xl flex gap-1" style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)' }}>
+          <div className="w-full p-1 rounded-2xl flex gap-1" style={{ background: '#f1f5f9', border: '1px solid #e2e8f0' }}>
             <button
               onClick={() => {
                 setLoginMode('guest');
@@ -446,8 +446,8 @@ export default function App() {
               }}
               className={`flex-1 py-3 text-xs font-bold rounded-xl transition-all cursor-pointer ${
                 loginMode === 'guest'
-                  ? 'bg-white/15 text-white shadow-xs border border-white/20'
-                  : 'text-white/50 hover:text-white/75'
+                  ? 'bg-white text-slate-800 shadow-sm border border-slate-200'
+                  : 'text-slate-500 hover:text-slate-800'
               }`}
             >
               Chỉ Xem Công Thức
@@ -459,8 +459,8 @@ export default function App() {
               }}
               className={`flex-1 py-3 text-xs font-bold rounded-xl transition-all cursor-pointer ${
                 loginMode === 'admin'
-                  ? 'bg-white/15 text-white shadow-xs border border-white/20'
-                  : 'text-white/50 hover:text-white/75'
+                  ? 'bg-white text-slate-800 shadow-sm border border-slate-200'
+                  : 'text-slate-500 hover:text-slate-800'
               }`}
             >
               Quyền Admin
@@ -501,14 +501,14 @@ export default function App() {
                     autoFocus
                   />
                   {passError && (
-                    <p className="text-xs font-semibold text-red-400 mt-1 pl-1">
+                    <p className="text-xs font-semibold text-red-600 mt-1 pl-1">
                       {passError}
                     </p>
                   )}
                 </div>
                 <button
                   type="submit"
-                  className="w-full py-3.5 bg-gradient-to-r from-[#4834D4] to-[#686DE0] text-white rounded-2xl text-sm font-black active:scale-98 transition-all shadow-md shadow-[#4834D4]/30 hover:brightness-110 hover:shadow-lg cursor-pointer"
+                  className="w-full py-3.5 bg-gradient-to-r from-[#6366f1] to-[#4f46e5] text-white rounded-2xl text-sm font-black active:scale-98 transition-all shadow-md shadow-indigo-500/30 hover:brightness-110 hover:shadow-lg cursor-pointer"
                 >
                   Xác nhận Admin
                 </button>
@@ -537,12 +537,12 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen text-white flex flex-col font-sans relative pb-24 sm:pb-8">
+    <div className="min-h-screen text-slate-800 flex flex-col font-sans relative pb-24 sm:pb-8">
       
       {/* 1. Header — Liquid Glass */}
       <header className="glass relative overflow-hidden shrink-0 sticky top-0 z-50" style={{ borderTop: 'none', borderLeft: 'none', borderRight: 'none', borderRadius: 0 }}>
         {/* Subtle color tint strip */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#4834D4]/20 via-[#686DE0]/15 to-[#E056FD]/15 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#6366f1]/5 via-[#8b5cf6]/5 to-[#ec4899]/5 pointer-events-none" />
 
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between relative z-10">
           <div className="flex items-center gap-3">
@@ -558,7 +558,7 @@ export default function App() {
           <div className="flex items-center gap-2">
             {userRole === 'admin' ? (
               <>
-                <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-bold px-3 py-1.5 rounded-2xl">
+                <span className="bg-emerald-50 text-emerald-700 border border-emerald-200/60 text-xs font-bold px-3 py-1.5 rounded-2xl">
                   Admin
                 </span>
                 <button
@@ -640,8 +640,8 @@ service cloud.firestore {
               onClick={() => setActiveTab('dishes')}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-black transition-all cursor-pointer ${
                 activeTab === 'dishes'
-                  ? 'bg-[#FF7675]/90 text-white shadow-md shadow-[#FF7675]/30'
-                  : 'text-glass-secondary hover:text-glass-primary hover:bg-white/8'
+                  ? 'bg-[#FF7675] text-white shadow-md shadow-[#FF7675]/20'
+                  : 'text-glass-secondary hover:text-glass-primary hover:bg-slate-100'
               }`}
               id="desktop-tab-dishes"
             >
@@ -652,8 +652,8 @@ service cloud.firestore {
               onClick={() => setActiveTab('notes')}
               className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-black transition-all cursor-pointer ${
                 activeTab === 'notes'
-                  ? 'bg-[#686DE0]/90 text-white shadow-md shadow-[#4834D4]/30'
-                  : 'text-glass-secondary hover:text-glass-primary hover:bg-white/8'
+                  ? 'bg-[#6366f1] text-white shadow-md shadow-indigo-500/20'
+                  : 'text-glass-secondary hover:text-glass-primary hover:bg-slate-100'
               }`}
               id="desktop-tab-notes"
             >
@@ -666,7 +666,7 @@ service cloud.firestore {
             <button
               onClick={activeTab === 'dishes' ? handleOpenCreateDish : handleOpenCreateNote}
               className={`flex items-center gap-1.5 px-5 py-3 text-white rounded-xl text-sm font-black active:scale-98 transition-all cursor-pointer shadow-md hover:brightness-110 ${
-                activeTab === 'dishes' ? 'bg-gradient-to-r from-[#FF7675] to-[#E17055] shadow-[#FF7675]/30' : 'bg-gradient-to-r from-[#4834D4] to-[#686DE0] shadow-[#4834D4]/30'
+                activeTab === 'dishes' ? 'bg-gradient-to-r from-[#FF7675] to-[#E17055] shadow-[#FF7675]/25' : 'bg-gradient-to-r from-[#6366f1] to-[#4f46e5] shadow-indigo-500/25'
               }`}
               id="desktop-btn-add-primary"
             >
@@ -685,7 +685,7 @@ service cloud.firestore {
             {/* Search, Filter Bar */}
             <div className="flex flex-col gap-4 glass p-4 sm:p-5 rounded-3xl">
               <div className="relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40 w-5 h-5 pointer-events-none" />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5 pointer-events-none" />
                 <input
                   type="text"
                   placeholder="Tìm kiếm món ngon theo tên, nguyên liệu, phân loại..."
@@ -704,7 +704,7 @@ service cloud.firestore {
                       setDishSearch('');
                       setShowSuggestions(false);
                     }}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 font-bold text-xs px-2 py-1 hover:bg-white/10 rounded-md transition-colors"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 font-bold text-xs px-2 py-1 hover:bg-slate-100 rounded-md transition-colors"
                   >
                     Xóa
                   </button>
@@ -714,21 +714,21 @@ service cloud.firestore {
                 {showSuggestions && searchSuggestions.length > 0 && (
                   <>
                     <div 
-                      className="fixed inset-0 z-10" 
+                       className="fixed inset-0 z-10" 
                       onClick={() => setShowSuggestions(false)}
                     />
-                    <div className="absolute left-0 right-0 top-full mt-2 glass-strong rounded-2xl z-20 overflow-hidden divide-y divide-white/10">
+                    <div className="absolute left-0 right-0 top-full mt-2 glass-strong rounded-2xl z-20 overflow-hidden divide-y divide-slate-100">
                       {searchSuggestions.map((dish) => (
                         <div 
                           key={dish.id}
-                          className="flex items-center justify-between p-3 hover:bg-white/8 cursor-pointer transition-colors duration-150"
+                          className="flex items-center justify-between p-3 hover:bg-slate-50 cursor-pointer transition-colors duration-150"
                           onClick={() => {
                             setDishSearch(dish.name);
                             setShowSuggestions(false);
                           }}
                         >
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl overflow-hidden bg-white/10 shrink-0">
+                            <div className="w-10 h-10 rounded-xl overflow-hidden bg-slate-100 shrink-0">
                               <img 
                                 src={dish.imageUrl || 'https://images.unsplash.com/photo-1495521821757-a1efb6729352?auto=format&fit=crop&q=80&w=150'} 
                                 alt={dish.name} 
@@ -737,7 +737,7 @@ service cloud.firestore {
                             </div>
                             <div className="text-left">
                               <p className="text-sm font-bold text-glass-primary">{dish.name}</p>
-                              <span className="inline-block text-[10px] text-[#FF7675] font-bold bg-[#FF7675]/15 px-2 py-0.5 rounded-md mt-0.5">
+                              <span className="inline-block text-[10px] text-[#FF7675] font-bold bg-[#FF7675]/10 px-2 py-0.5 rounded-md mt-0.5">
                                 {dish.category}
                               </span>
                             </div>
@@ -750,7 +750,7 @@ service cloud.firestore {
                               handleViewDishDetails(dish);
                               setShowSuggestions(false);
                             }}
-                            className="text-xs font-bold text-[#686DE0] hover:bg-[#686DE0]/15 px-3 py-1.5 rounded-xl transition-colors shrink-0"
+                            className="text-xs font-bold text-indigo-600 hover:bg-indigo-50 px-3 py-1.5 rounded-xl transition-colors shrink-0"
                           >
                             Xem nhanh
                           </button>
@@ -866,7 +866,7 @@ service cloud.firestore {
             {/* Notes Search input layout */}
             <div className="glass p-4 rounded-3xl">
               <div className="relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40 w-5 h-5 pointer-events-none" />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5 pointer-events-none" />
                 <input
                   type="text"
                   placeholder="Tìm kiếm nội dung ghi chú nhanh..."
@@ -878,7 +878,7 @@ service cloud.firestore {
                 {noteSearch && (
                   <button
                     onClick={() => setNoteSearch('')}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-white/40 hover:text-white/70 font-semibold text-xs px-2.5 py-1"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 font-semibold text-xs px-2.5 py-1"
                   >
                     Xóa
                   </button>
@@ -893,9 +893,9 @@ service cloud.firestore {
                   {/* Pinned section header line */}
                   {pinnedNotes.length > 0 && (
                     <div className="space-y-3">
-                      <h4 className="text-xs font-black text-white/40 uppercase tracking-widest flex items-center gap-1">
+                      <h4 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-1">
                         <span>📌 Ghi chú cố định được ghim</span>
-                        <div className="h-[1px] bg-white/10 flex-1 ml-2" />
+                        <div className="h-[1px] bg-slate-200 flex-1 ml-2" />
                       </h4>
                       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
                         {pinnedNotes.map((note) => (
@@ -915,9 +915,9 @@ service cloud.firestore {
                   {/* Other standard unpinned notes */}
                   <div className="space-y-3">
                     {pinnedNotes.length > 0 && unpinnedNotes.length > 0 && (
-                      <h4 className="text-xs font-black text-white/40 uppercase tracking-widest flex items-center gap-1">
+                      <h4 className="text-xs font-black text-slate-400 uppercase tracking-widest flex items-center gap-1">
                         <span>Khác</span>
-                        <div className="h-[1px] bg-white/10 flex-1 ml-2" />
+                        <div className="h-[1px] bg-slate-200 flex-1 ml-2" />
                       </h4>
                     )}
                     {unpinnedNotes.length > 0 ? (
@@ -942,9 +942,9 @@ service cloud.firestore {
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="flex flex-col items-center justify-center p-12 glass rounded-3xl text-center border-dashed border border-white/20 min-h-[300px]"
+                  className="flex flex-col items-center justify-center p-12 glass rounded-3xl text-center border-dashed border border-slate-200 min-h-[300px]"
                 >
-                  <div className="w-16 h-16 bg-[#686DE0]/20 rounded-full flex items-center justify-center mb-4 text-[#686DE0]">
+                  <div className="w-16 h-16 bg-[#6366f1]/10 rounded-full flex items-center justify-center mb-4 text-[#6366f1]">
                     <BookText className="w-8 h-8" />
                   </div>
                   <h3 className="font-extrabold text-glass-primary text-lg mb-1">Không có ghi chú nào của bạn</h3>
@@ -956,14 +956,14 @@ service cloud.firestore {
                   {noteSearch ? (
                     <button
                       onClick={() => setNoteSearch('')}
-                      className="px-5 py-2.5 bg-[#686DE0]/15 hover:bg-[#686DE0]/25 text-[#686DE0] text-sm font-bold rounded-2xl cursor-pointer"
+                      className="px-5 py-2.5 bg-[#6366f1]/10 hover:bg-[#6366f1]/20 text-[#6366f1] text-sm font-bold rounded-2xl cursor-pointer"
                     >
                       Xem tất cả ghi chú
                     </button>
                   ) : (
                     <button
                       onClick={handleOpenCreateNote}
-                      className="px-5 py-2.5 bg-gradient-to-r from-[#4834D4] to-[#686DE0] text-white text-sm font-extrabold rounded-2xl shadow-md shadow-[#4834D4]/30 transition-all cursor-pointer hover:brightness-110"
+                      className="px-5 py-2.5 bg-gradient-to-r from-[#6366f1] to-[#4f46e5] text-white text-sm font-extrabold rounded-2xl shadow-md shadow-indigo-500/25 transition-all cursor-pointer hover:brightness-110"
                     >
                       Tạo ghi chú đầu tiên
                     </button>
@@ -983,7 +983,7 @@ service cloud.firestore {
             onClick={activeTab === 'dishes' ? handleOpenCreateDish : handleOpenCreateNote}
             type="button"
             className={`w-14 h-14 bg-gradient-to-tr text-white rounded-full flex items-center justify-center shadow-lg active:scale-95 transition-all ${
-              activeTab === 'dishes' ? 'from-[#FF7675] to-[#E17055]' : 'from-[#4834D4] to-[#686DE0]'
+              activeTab === 'dishes' ? 'from-[#FF7675] to-[#E17055]' : 'from-[#6366f1] to-[#4f46e5]'
             }`}
             id="btn-fab-add"
             title={activeTab === 'dishes' ? 'Thêm món ăn' : 'Thêm ghi chú'}
@@ -999,11 +999,11 @@ service cloud.firestore {
           onClick={() => { setActiveTab('dishes'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
           type="button"
           className={`flex flex-col items-center gap-1 transition-all ${
-            activeTab === 'dishes' ? 'text-[#FF7675] scale-105 font-black' : 'text-white/40 font-bold'
+            activeTab === 'dishes' ? 'text-[#FF7675] scale-105 font-black' : 'text-slate-400 font-bold'
           }`}
           id="mobile-nav-dishes"
         >
-          <div className={`p-1.5 rounded-full ${activeTab === 'dishes' ? 'bg-[#FF7675]/20' : 'bg-transparent'}`}>
+          <div className={`p-1.5 rounded-full ${activeTab === 'dishes' ? 'bg-[#FF7675]/10' : 'bg-transparent'}`}>
             <Utensils className="w-5.5 h-5.5" />
           </div>
           <span className="text-[10px] uppercase tracking-wider">Công Thức</span>
@@ -1013,11 +1013,11 @@ service cloud.firestore {
           onClick={() => { setActiveTab('notes'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
           type="button"
           className={`flex flex-col items-center gap-1 transition-all ${
-            activeTab === 'notes' ? 'text-[#686DE0] scale-105 font-black' : 'text-white/40 font-bold'
+            activeTab === 'notes' ? 'text-[#6366f1] scale-105 font-black' : 'text-slate-400 font-bold'
           }`}
           id="mobile-nav-notes"
         >
-          <div className={`p-1.5 rounded-full ${activeTab === 'notes' ? 'bg-[#686DE0]/20' : 'bg-transparent'}`}>
+          <div className={`p-1.5 rounded-full ${activeTab === 'notes' ? 'bg-indigo-50' : 'bg-transparent'}`}>
             <BookText className="w-5.5 h-5.5" />
           </div>
           <span className="text-[10px] uppercase tracking-wider">Ghi Chú</span>

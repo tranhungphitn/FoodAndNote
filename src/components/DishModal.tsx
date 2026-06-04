@@ -338,7 +338,7 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
                     onBlur={() => setName(capitalizeWords(name))}
                     className={`w-full text-sm font-semibold text-slate-800 bg-slate-50 border ${
                       errors.name ? 'border-red-400 ring-2 ring-red-100/50' : 'border-slate-200'
-                    } focus:bg-white rounded-xl px-4 py-3 outline-hidden focus:ring-4 focus:ring-[#4834D4]/10 focus:border-[#4834D4]`}
+                    } focus:bg-white rounded-xl px-4 py-3 outline-hidden focus:ring-4 focus:ring-[#6366f1]/10 focus:border-[#6366f1]`}
                   />
                   {errors.name && <span className="text-xs font-semibold text-red-500 mt-1">{errors.name}</span>}
                 </div>
@@ -354,7 +354,7 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
                     placeholder="Ví dụ: Món canh chua thanh mát đậm đà cho ngày hè..."
                     value={summary}
                     onChange={(e) => setSummary(e.target.value)}
-                    className="w-full text-sm font-semibold text-slate-800 bg-slate-50 border border-slate-200 focus:bg-white rounded-xl px-4 py-3 outline-hidden focus:ring-4 focus:ring-[#4834D4]/10 focus:border-[#4834D4]"
+                    className="w-full text-sm font-semibold text-slate-800 bg-slate-50 border border-slate-200 focus:bg-white rounded-xl px-4 py-3 outline-hidden focus:ring-4 focus:ring-[#6366f1]/10 focus:border-[#6366f1]"
                   />
                 </div>
 
@@ -516,7 +516,7 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
                     onBlur={() => setIngredients(capitalizeFirstLetterOfLines(ingredients))}
                     className={`w-full h-36 text-sm text-slate-700 bg-slate-50 border ${
                       errors.ingredients ? 'border-red-400 ring-2 ring-red-100/50' : 'border-slate-200'
-                    } focus:bg-white rounded-xl p-4 outline-hidden focus:ring-4 focus:ring-[#4834D4]/10 focus:border-[#4834D4] resize-y`}
+                    } focus:bg-white rounded-xl p-4 outline-hidden focus:ring-4 focus:ring-[#6366f1]/10 focus:border-[#6366f1] resize-y`}
                   />
                   {errors.ingredients && <span className="text-xs font-semibold text-red-500 mt-1">{errors.ingredients}</span>}
                 </div>
@@ -540,7 +540,7 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
                     onBlur={() => setInstructions(capitalizeFirstLetterOfLines(instructions))}
                     className={`w-full h-40 text-sm text-slate-700 bg-slate-50 border ${
                       errors.instructions ? 'border-red-400 ring-2 ring-red-100/50' : 'border-slate-200'
-                    } focus:bg-white rounded-xl p-4 outline-hidden focus:ring-4 focus:ring-[#4834D4]/10 focus:border-[#4834D4] resize-y`}
+                    } focus:bg-white rounded-xl p-4 outline-hidden focus:ring-4 focus:ring-[#6366f1]/10 focus:border-[#6366f1] resize-y`}
                   />
                   {errors.instructions && <span className="text-xs font-semibold text-red-500 mt-1">{errors.instructions}</span>}
                 </div>

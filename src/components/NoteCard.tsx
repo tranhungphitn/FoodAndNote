@@ -36,8 +36,8 @@ export default function NoteCard({ note, onEdit, onDelete, onTogglePin, readOnly
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.2 }}
-      className="glass-note relative flex flex-col justify-between rounded-3xl p-6"
-      style={{ background: 'rgba(255,255,255,0.08)' }}
+      className="glass-note relative flex flex-col justify-between rounded-3xl p-6 border border-slate-200"
+      style={{ backgroundColor: note.color || '#ffffff' }}
       id={`note-card-${note.id}`}
     >
       <div>
@@ -55,7 +55,7 @@ export default function NoteCard({ note, onEdit, onDelete, onTogglePin, readOnly
             }}
             type="button"
             className={`p-2 rounded-full transition-colors duration-150 ${
-              note.isPinned ? 'text-[#FF7675] scale-110' : 'text-gray-400 hover:text-gray-600'
+              note.isPinned ? 'text-[#FF7675] scale-110' : 'text-slate-400 hover:text-slate-600'
             } ${readOnly ? 'cursor-default pointer-events-none' : 'hover:bg-black/5'}`}
             title={note.isPinned ? 'Bỏ ghim' : 'Ghim ghi chú'}
             id={`btn-pin-${note.id}`}
@@ -66,14 +66,14 @@ export default function NoteCard({ note, onEdit, onDelete, onTogglePin, readOnly
 
         {/* Note Body Text */}
         <div className="text-glass-secondary text-sm whitespace-pre-wrap break-words leading-relaxed mb-6 line-clamp-6">
-          {note.content || <em className="text-gray-400">Không có nội dung</em>}
+          {note.content || <em className="text-slate-400">Không có nội dung</em>}
         </div>
       </div>
 
       {/* Footer Controls Row */}
-      <div className="flex items-center justify-between border-t border-white/15 pt-3">
-        <span className="flex items-center gap-1 text-[11px] font-bold text-white/45 font-mono">
-          <Calendar className="w-3.5 h-3.5 text-gray-400" />
+      <div className="flex items-center justify-between border-t border-black/5 pt-3">
+        <span className="flex items-center gap-1 text-[11px] font-bold text-slate-500 font-mono">
+          <Calendar className="w-3.5 h-3.5 text-slate-400" />
           {formatDate(note.updatedAt)}
         </span>
 
@@ -83,7 +83,7 @@ export default function NoteCard({ note, onEdit, onDelete, onTogglePin, readOnly
             <button
               onClick={() => onEdit(note)}
               type="button"
-              className="p-2 text-slate-500 hover:text-[#4834D4] hover:bg-[#4834D4]/5 rounded-xl transition-all duration-150"
+              className="p-2 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all duration-150"
               title="Chỉnh sửa"
               id={`btn-edit-${note.id}`}
             >
@@ -94,7 +94,7 @@ export default function NoteCard({ note, onEdit, onDelete, onTogglePin, readOnly
                 onDelete(note.id);
               }}
               type="button"
-              className="p-2 text-slate-500 hover:text-[#FF7675] hover:bg-[#FF7675]/5 rounded-xl transition-all duration-150"
+              className="p-2 text-slate-500 hover:text-[#FF7675] hover:bg-[#FF7675]/10 rounded-xl transition-all duration-150"
               title="Xóa"
               id={`btn-delete-${note.id}`}
             >

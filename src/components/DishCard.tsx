@@ -81,7 +81,7 @@ export default function DishCard({ dish, onViewDetails, onEdit, onDelete, onTogg
                 onEdit(dish);
               }}
               type="button"
-              className="p-1.5 sm:p-2.5 bg-white/95 backdrop-blur-md hover:bg-[#4834D4] text-slate-700 hover:text-white rounded-full shadow-sm transition-all cursor-pointer"
+              className="p-1.5 sm:p-2.5 bg-white/95 backdrop-blur-md hover:bg-[#6366f1] text-slate-700 hover:text-white rounded-full shadow-sm transition-all cursor-pointer"
               title="Sửa công thức"
               id={`btn-edit-dish-${dish.id}`}
             >
@@ -119,14 +119,14 @@ export default function DishCard({ dish, onViewDetails, onEdit, onDelete, onTogg
               {dish.summary}
             </p>
           ) : (
-            <p className="text-[10px] sm:text-xs italic text-white/20 leading-relaxed font-medium">
+            <p className="text-[10px] sm:text-xs italic text-slate-400 leading-relaxed font-medium">
               Chưa cập nhật tóm tắt.
             </p>
           )}
         </div>
 
         {/* Footer click actions */}
-        <div className="border-t border-white/10 pt-2 sm:pt-3 flex items-center justify-between mt-auto">
+        <div className="border-t border-slate-100 pt-2 sm:pt-3 flex items-center justify-between mt-auto">
           <div className="flex items-center gap-1 sm:gap-1.5">
             <button
               onClick={(e) => {
@@ -148,7 +148,7 @@ export default function DishCard({ dish, onViewDetails, onEdit, onDelete, onTogg
                 }`} 
               />
             </button>
-            <span className="text-[8px] sm:text-[10px] text-white/35 font-mono whitespace-nowrap">
+            <span className="text-[8px] sm:text-[10px] text-slate-400 font-mono whitespace-nowrap">
               {dish.createdAt ? new Date(dish.createdAt).toLocaleDateString('vi-VN') : new Date(dish.updatedAt).toLocaleDateString('vi-VN')}
             </span>
           </div>
