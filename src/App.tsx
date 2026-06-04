@@ -24,6 +24,16 @@ import DishFormScreen from './components/DishFormScreen';
 
 import { motion, AnimatePresence } from 'motion/react';
 
+// Google Firebase Firestore Connection
+import { db } from './firebase';
+import { 
+  collection, 
+  getDocs, 
+  setDoc, 
+  deleteDoc, 
+  doc 
+} from 'firebase/firestore';
+
 export default function App() {
   // Current tab: 'dishes' (Công thức) | 'notes' (Ghi chú)
   const [activeTab, setActiveTab] = useState<'dishes' | 'notes'>(() => {
@@ -41,29 +51,39 @@ export default function App() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Load from server-side JSON REST API on mount
+  // Load from Firebase Firestore on mount
   useEffect(() => {
     const checkAndInitData = async () => {
       try {
-        const [dishesRes, notesRes] = await Promise.all([
-          fetch('/api/dishes'),
-          fetch('/api/notes')
-        ]);
+        const dishesCol = collection(db, 'dishes');
+        const notesCol = collection(db, 'notes');
         
-        if (dishesRes.ok && notesRes.ok) {
-          const fetchedDishes = await dishesRes.json();
-          const fetchedNotes = await notesRes.json();
+        const [dishesSnapshot, notesSnapshot] = await Promise.all([
+          getDocs(dishesCol),
+          getDocs(notesCol)
+        ]);
+
+        const fetchedDishes = dishesSnapshot.docs.map(doc => doc.data() as Dish);
+        const fetchedNotes = notesSnapshot.docs.map(doc => doc.data() as Note);
+
+        // Seeding database if empty on first startup
+        if (fetchedDishes.length === 0 && fetchedNotes.length === 0) {
+          await Promise.all([
+            ...SAMPLE_DISHES.map(d => setDoc(doc(db, 'dishes', d.id), d)),
+            ...SAMPLE_NOTES.map(n => setDoc(doc(db, 'notes', n.id), n))
+          ]);
+          setDishes(SAMPLE_DISHES);
+          setNotes(SAMPLE_NOTES);
+        } else {
+          // Sort dishes by updatedAt descending
+          fetchedDishes.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+          // Sort notes by updatedAt descending
+          fetchedNotes.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
           setDishes(fetchedDishes);
           setNotes(fetchedNotes);
-        } else {
-          // Fallback to localStorage if server returns non-200
-          const localDishes = localStorage.getItem('sotay_dishes');
-          const localNotes = localStorage.getItem('sotay_notes');
-          setDishes(localDishes ? JSON.parse(localDishes) : SAMPLE_DISHES);
-          setNotes(localNotes ? JSON.parse(localNotes) : SAMPLE_NOTES);
         }
       } catch (err) {
-        console.error('Failed to connect to API, initializing with local offline data:', err);
+        console.error('Failed to connect to Firebase Firestore, falling back to offline cache:', err);
         const localDishes = localStorage.getItem('sotay_dishes');
         const localNotes = localStorage.getItem('sotay_notes');
         setDishes(localDishes ? JSON.parse(localDishes) : SAMPLE_DISHES);
@@ -131,63 +151,32 @@ export default function App() {
     isFavorite?: boolean;
     summary?: string;
   }) => {
-    const targetDish: Partial<Dish> = {
+    const targetDish: Dish = {
+      id: (dishFormMode === 'edit' && selectedDish) ? selectedDish.id : `dish-${Date.now()}`,
       name: dishData.name,
       category: dishData.category,
       ingredients: dishData.ingredients,
       instructions: dishData.instructions,
       imageUrl: dishData.imageUrl,
-      isFavorite: dishData.isFavorite,
+      isFavorite: !!dishData.isFavorite,
       summary: dishData.summary || '',
+      createdAt: (dishFormMode === 'edit' && selectedDish) ? (selectedDish.createdAt || new Date().toISOString()) : new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     };
     
+    // Optimistic UI state update
     if (dishFormMode === 'edit' && selectedDish) {
-      targetDish.id = selectedDish.id;
-      targetDish.createdAt = selectedDish.createdAt;
+      setDishes(prev => prev.map(d => d.id === selectedDish.id ? targetDish : d));
     } else {
-      targetDish.createdAt = new Date().toISOString();
+      setDishes(prev => [targetDish, ...prev]);
     }
 
     try {
-      const res = await fetch('/api/dishes', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(targetDish)
-      });
-
-      if (res.ok) {
-        const savedDish = await res.json();
-        if (dishFormMode === 'edit' && selectedDish) {
-          setDishes(prev => prev.map(d => d.id === selectedDish.id ? savedDish : d));
-        } else {
-          setDishes(prev => [savedDish, ...prev]);
-        }
-      } else {
-        throw new Error('Server side write error');
-      }
+      await setDoc(doc(db, 'dishes', targetDish.id), targetDish);
     } catch (err) {
-      console.error('Optimistic local save due to API error:', err);
-      // Fallback local save
-      if (dishFormMode === 'edit' && selectedDish) {
-        setDishes(prev =>
-          prev.map(d =>
-            d.id === selectedDish.id
-              ? { ...d, ...dishData, updatedAt: new Date().toISOString() }
-              : d
-          )
-        );
-      } else {
-        const newDish: Dish = {
-          id: `dish-${Date.now()}`,
-          ...dishData,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        };
-        setDishes(prev => [newDish, ...prev]);
-      }
+      console.error('Failed to save dish to Firestore:', err);
     }
+
     setDishFormMode(null);
     setSelectedDish(null);
   };
@@ -200,11 +189,9 @@ export default function App() {
     }
 
     try {
-      await fetch(`/api/dishes/${id}`, {
-        method: 'DELETE'
-      });
+      await deleteDoc(doc(db, 'dishes', id));
     } catch (err) {
-      console.error('Failed to sync deletion to server:', err);
+      console.error('Failed to sync deletion to Firestore:', err);
     }
   };
 
@@ -212,15 +199,9 @@ export default function App() {
     const updatedDish = { ...dish, isFavorite: !dish.isFavorite };
     setDishes(prev => prev.map(d => d.id === dish.id ? updatedDish : d));
     try {
-      await fetch('/api/dishes', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(updatedDish)
-      });
+      await setDoc(doc(db, 'dishes', dish.id), updatedDish);
     } catch (err) {
-      console.error('Failed to sync favorite status to server:', err);
+      console.error('Failed to sync favorite status to Firestore:', err);
     }
   };
 
@@ -259,56 +240,25 @@ export default function App() {
 
   // Note database actions
   const handleSaveNote = async (title: string, content: string, color: string) => {
-    const targetNote: Partial<Note> = {
+    const targetNote: Note = {
+      id: selectedNote ? selectedNote.id : `note-${Date.now()}`,
       title,
       content,
-      color
+      color,
+      isPinned: selectedNote ? selectedNote.isPinned : false,
+      updatedAt: new Date().toISOString()
     };
+
     if (selectedNote) {
-      targetNote.id = selectedNote.id;
-      targetNote.isPinned = selectedNote.isPinned;
+      setNotes(prev => prev.map(n => n.id === selectedNote.id ? targetNote : n));
+    } else {
+      setNotes(prev => [targetNote, ...prev]);
     }
 
     try {
-      const res = await fetch('/api/notes', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(targetNote)
-      });
-
-      if (res.ok) {
-        const savedNote = await res.json();
-        if (selectedNote) {
-          setNotes(prev => prev.map(n => n.id === selectedNote.id ? savedNote : n));
-        } else {
-          setNotes(prev => [savedNote, ...prev]);
-        }
-      } else {
-        throw new Error('Server side write error');
-      }
+      await setDoc(doc(db, 'notes', targetNote.id), targetNote);
     } catch (err) {
-      console.error('Optimistic local save due to API error:', err);
-      if (selectedNote) {
-        setNotes(prev =>
-          prev.map(n =>
-            n.id === selectedNote.id
-              ? { ...n, title, content, color, updatedAt: new Date().toISOString() }
-              : n
-          )
-        );
-      } else {
-        const newNote: Note = {
-          id: `note-${Date.now()}`,
-          title,
-          content,
-          color,
-          isPinned: false,
-          updatedAt: new Date().toISOString()
-        };
-        setNotes(prev => [newNote, ...prev]);
-      }
+      console.error('Failed to save note to Firestore:', err);
     }
     setIsNoteModalOpen(false);
     setSelectedNote(null);
@@ -317,11 +267,9 @@ export default function App() {
   const handleDeleteNote = async (id: string) => {
     setNotes(prev => prev.filter(n => n.id !== id));
     try {
-      await fetch(`/api/notes/${id}`, {
-        method: 'DELETE'
-      });
+      await deleteDoc(doc(db, 'notes', id));
     } catch (err) {
-      console.error('Failed to sync note delete to server:', err);
+      console.error('Failed to sync note delete to Firestore:', err);
     }
   };
 
@@ -361,21 +309,15 @@ export default function App() {
     const noteToPin = notes.find(n => n.id === id);
     if (!noteToPin) return;
 
-    const updatedNote = { ...noteToPin, isPinned: !noteToPin.isPinned };
+    const updatedNote = { ...noteToPin, isPinned: !noteToPin.isPinned, updatedAt: new Date().toISOString() };
     setNotes(prev =>
       prev.map(n => n.id === id ? updatedNote : n)
     );
 
     try {
-      await fetch('/api/notes', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(updatedNote)
-      });
+      await setDoc(doc(db, 'notes', id), updatedNote);
     } catch (err) {
-      console.error('Failed to sync pin toggle to server:', err);
+      console.error('Failed to sync pin toggle to Firestore:', err);
     }
   };
 
