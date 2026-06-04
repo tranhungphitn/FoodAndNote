@@ -1,0 +1,366 @@
+import { Note, Dish } from './types';
+
+export const SAMPLE_NOTES: Note[] = [
+  {
+    id: 'note-1',
+    title: '🛒 Danh sách đi chợ cuối tuần',
+    content: '- 500g tôm thẻ tươi sống làm nem\n- 1 bó rau muống non xanh mướt\n- Gia vị: Hành tím củ, tỏi băm khô\n- Trái cây tráng miệng: Cam sành ngọt, dưa lạp\n- Đồ dùng gia đình: Giấy ăn, nước rửa chén hữu cơ',
+    color: '#FEF9E7', // Vibrant Yellow/Amber
+    updatedAt: '2026-06-04T07:30:00.000Z',
+    isPinned: true
+  },
+  {
+    id: 'note-2',
+    title: '🍯 Bí quyết nước mắm chua ngọt kẹo',
+    content: 'Tỷ lệ vàng thần thánh 1:1:1:4 siêu chuẩn vị:\n- 1 muỗng canh nước mắm cốt ngon\n- 1 muỗng tinh đường cát trắng\n- 1 muỗng cốt nước chanh tươi (bỏ hạt)\n- 4 muỗng nước lọc ấm\n\n📌 Lưu ý vàng để tỏi ớt nổi 100%:\nHòa tan đường vào nước ấm và chanh trước, tiếp theo thêm nước mắm. Cuối cùng mới thả tỏi & ớt băm nhuyễn khô vào cốt nước mắm đã pha!',
+    color: '#EBF5FB', // Vibrant Blue/Sky
+    updatedAt: '2026-06-03T18:45:00.000Z',
+    isPinned: false
+  },
+  {
+    id: 'note-3',
+    title: '💡 Gợi ý thực đơn tuần tới dồi dào dinh dưỡng',
+    content: '- Thứ 2: Thịt heo kho tộ + Canh rau bí nấu tôm\n- Thứ 3: Đậu hũ nhồi thịt sốt cà chua + Canh cải ngọt\n- Thứ 4: Cá lóc hấp hành + Canh bầu băm sườn\n- Thứ 5: Gà xào sả ớt ba rọi kho tiêu\n- Thứ 6: Đổi vị: Phở bò dĩa cuốn rau thơm chấm mắm nêm!',
+    color: '#F4ECF7', // Vibrant Purple
+    updatedAt: '2026-06-02T10:15:00.000Z',
+    isPinned: false
+  }
+];
+
+export const SAMPLE_DISHES: Dish[] = [
+  {
+    id: 'dish-1',
+    name: 'Phở Bò Hà Nội Thượng Hạng',
+    ingredients: '- Bánh phở tươi sợi vừa: 500g\n- Thịt bò phi lê mềm dẻo: 300g\n- Xương ống bò lớn để hầm: 1.5kg\n- Gừng già thơm, hành tây tím, rễ hành\n- Gia vị: Quế chi, tai vị (hồi), dảo quả, Hạt ngò thơm',
+    instructions: '1. Khử mùi xương bò bằng cách ngâm hầm trong 6-8 tiếng hớt bọt liên tục.\n2. Cho quế hồi thảo quả nướng hành tây gừng già vào trước ăn 1 tiếng.\n3. Nêm đường phèn, mắm nhĩ và bột ngọt vừa vặn.\n4. Trụ bánh phở tươi dẻo mượt, rải hành tươi lên thịt bò sém chín, chan nước dùng cực nóng hổi.',
+    imageUrl: 'https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?w=600&auto=format&fit=crop&q=80',
+    category: 'Món nước',
+    updatedAt: '2026-06-04T08:00:00.000Z'
+  },
+  {
+    id: 'dish-2',
+    name: 'Thịt Kho Tàu Trứng Vịt Đậm Đà',
+    ingredients: '- Thịt ba chỉ rút sườn heo ngon: 600g\n- Trứng vịt ta luộc chín: 5 - 6 quả\n- Nước dừa xiêm ngọt nguyên chất: 500ml\n- Hành tím, tỏi băm ráo',
+    instructions: '1. Ướp thịt ba rọi với hành tỏi băm, nước mắm ngon, đường cát thốt nốt mướt trong 40 phút.\n2. Đảo săn thịt trên bếp tới xém hồng tứa mỡ.\n3. Đổ ngập nước dừa xiêm hầm chín tơi mỡ dăm riu riu lửa, sau thả trứng luộc vào kho mật sánh kẹo láng.',
+    imageUrl: 'https://images.unsplash.com/photo-1617093727343-374698b1b08d?w=600&auto=format&fit=crop&q=80',
+    category: 'Món mặn',
+    updatedAt: '2026-06-04T07:50:00.000Z'
+  },
+  {
+    id: 'dish-3',
+    name: 'Canh Chua Cá Lóc Chuẩn Vị Nam Bộ',
+    ingredients: '- Cá lóc đồng béo tròn mảnh: 600g\n- Dọc mùng (bạc hà), giá đỗ xanh, đậu bắp, nước cốt me, cà chua múi\n- Hành tỏi Lý sơn băm dập, rau ngò gai',
+    instructions: '1. Làm cá lóc sạch nhớt, xắt lát khoanh dầy sập ướp hạt nêm tiêu sọ.\n2. Phi thơm hành tỏi dầm xào nát cà chua và thơm tạo màu nước lèo sủi mượt.\n3. Rót nước ấm cốt me vào đun bùng, dội cá lóc luộc vừa chín róc thớ nhẹ nhàng.\n4. Thả đậu bắp giá đỗ dọc mùng nêm vừa cân bằng chua chua ngọt béo ngậy rắc tỏi phi giòn sột.',
+    imageUrl: 'https://images.unsplash.com/photo-1541832676-9b763b0239ab?w=600&auto=format&fit=crop&q=80',
+    category: 'Món canh',
+    updatedAt: '2026-06-04T07:45:00.000Z'
+  },
+  {
+    id: '55XMntXK4iQQmYkcgZMR',
+    name: 'Bánh Xèo',
+    ingredients: '- 1 bịch bột bánh xèo ngon\n- 1 lít nước cốt dừa mịn béo\n- 1 lon soda dã dẻo\n- Hành lá thái nhỏ dăm\n- 400g thịt heo nạc bằm ngọt lịm\n- Nhân đính kèm: giá sống, giá đỗ, hoặc măng mỏng sắn thớ nhuyễn',
+    instructions: '1. Khuấy thật đều: 500g bột bánh xèo + 100g bột chiên giòn + 800ml nước cốt dừa + 200ml soda + 1 trứng vịt dẻo.\n2. Cất ngăn mát tủ lạnh 2 tiếng trước chiên láng. Sau thả hành hoa thơm.\n3. Chuẩn bị nhân thịt bằm nhuyễn béo ngọt: Ướp rưới 1mcf hạt nêm bùi, 1mcf đường thốt nốt, 1mcf mắm ngon cùng ít hành tím.\n4. Phi vàng hành băm trút nhân vào xào thật chín dáo béo kẹo, múc dọn tráng bánh xèo giòn sột.',
+    imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80',
+    category: 'Món Heo',
+    updatedAt: '2026-06-04T02:00:00.000Z'
+  },
+  {
+    id: 'xBApCdQs0xftcPmaWHgw',
+    name: 'Mắm Chưng',
+    ingredients: '- 300g thịt nạc heo vai dăm béo ngậy\n- 130g mắm chưng đặc vị Nàng Út bùi\n- 4 - 5 quả trứng vịt béo dẻo\n- Hành tím Lý sơn thái dăm, tỏi băm thơm nồng',
+    instructions: '1. Trộn đều quánh mịn thịt heo dăm xay nhuyễn cùng mắm và đập 4 quả trứng vịt bùi chắt vị.\n2. Nêm kĩ thơm: Cho nửa muỗng Đường, xíu bột ngọt thốc, hành tím bào mỏng mảnh xộc dính đều thớ nạc.\n3. Trút vào tô nén chặt đem Chưng hấp cách thủy sôi nhẹ trong vòng 35-45 phút thơm nức là chín dẻo quẹo.',
+    imageUrl: 'https://cdn2.fptshop.com.vn/unsafe/1920x0/filters:format(webp):quality(75)/2023_10_27_638340005683228338_ca-ch-la-m-ma-m-chu-ng-0.jpg',
+    category: 'Linh Tinh',
+    updatedAt: '2026-06-04T01:55:00.000Z'
+  },
+  {
+    id: 'NsC117oTQIZxvU0GLpYP',
+    name: 'Nước mắm ăn bún',
+    ingredients: '- 1 củ cà rốt đỏ cam ngọt, 1 củ cải trắng ngọt ráo\n- Tỏi băm khô, ớt đỏ hăng cay cay chỉ thiên\n- Gia vị pha: nước mắm nhĩ nhạt bùi, đường thốt nốt, giấm gạo chua thanh dồi dào',
+    instructions: '1. Làm đồ chua: Bào mỏng cà rốt với cải trắng dầm xát 1 muỗng cà phê muối hạt, vắt kiệt và xả ráo nước trong xanh.\n2. Pha nước chua ngọt ngâm kiệt: 1 Nước + 1 Giấm dão + nửa muỗng Đường, xíu muối hạt dầm thả dồi dào cải trắng cà rốt ngâm giòn.\n3. Pha chế nước mắm béo ngập tỏi ớt nổi hoa: 120g Nước Sôi ấm + 80g Đường vàng hòa tan hoàn hảo, tiếp rưới 40g nước mắm mặn ngon, sủi bột ngọt tơi bọc, rải tỏi ớt băm khô nổi bập bập siêu chuẩn vị.',
+    imageUrl: 'https://cdn.tgdd.vn/Files/2017/01/18/939265/cach-lam-nuoc-mam-chua-ngot-ngon-toi-ot-noi-lenh-benh-dep-mat-202204201517579399.jpg',
+    category: 'Linh Tinh',
+    updatedAt: '2026-06-04T01:50:00.000Z'
+  },
+  {
+    id: 'Rar0dkY5QtbERGQIl2bJ',
+    name: 'Bún thịt Xào',
+    ingredients: '- 600g - 700g sườn nạc vai heo dẻo xắt mỏng thớ ngọt\n- 2 cây sả tươi bằm mịn, hành tím khô, tỏi ớt bọc thơm ngọt lịm\n- Tổ hợp vị: Dầu ăn, nước tương, dầu hào sệt béo, hạt nêm sột',
+    instructions: '1. Thịt vai heo làm sạch dáo mọc thái bản mỏng to béo vừa đút dầm.\n2. Tiến hành ướp thịt xốc đều: 1 muỗng dầu hào sệt bơ thơm láng, 1 muỗng nước tương bùi dại bọc tỏi băm nhuyễn hành sả cây, 1 muỗng hạt nêm, bóp đường bột ngọt tơi ngấm deep trong 20 phút lò nóng.\n3. Phi hành tỏi Lý Sơn vàng sém sần sật bốc khói, trút thịt heo ướp dính sả vào xào cực nhanh tay lửa to ngạo nghễ sém da thơm ngậy.',
+    imageUrl: 'https://i-giadinh.vnecdn.net/2023/07/18/anhdaidien1-1689670864-9201-1689671016.jpg',
+    category: 'Món Heo',
+    updatedAt: '2026-06-04T01:45:00.000Z'
+  },
+  {
+    id: 'tFw5YPxhzYVa8cWKAtPd',
+    name: 'Nước súp Hủ tíu/Bánh canh',
+    ingredients: '- 1.5kg xương ống heo dăm tủy béo dẻo ngọt ngào\n- 2 củ cải trắng ngọt dòn, 1 bắp ngô Mỹ xắt đôi béo dẻo ngọt bùi\n- 1 củ hành tây nướng sém vàng lộng lẫy\n- Gia vị ngọt hầm: hạt nêm, muối dão bùi, nước mắm mặn, đường phèn sệt, đường cát béo',
+    instructions: '1. Khử sạch gầm xương heo đem hầm liu riu bọt lội trong 5 Lít nước dùng trong sạch cùng củ cải trắng cắt khúc, ngô ngọt và hành tây nướng đậm đà dã ngọt.\n2. Nêm hương kẹo cho nước dùng cổ truyền dậy ngọt đậm tuyệt vời:\n- Thêm 40g hạt nêm sột dòn cát mượt\n- Thêm 17g muối hạt tinh dã nhạt\n- Thêm 15g nước mắm cốt cơm sẫm màu đại dương\n- Thêm 50g đường phèn thanh dã ngọt mát thấu\n- Thêm 40g đường cát dịu và 30g bột ngọt ngậy thơm mượt dính dẻo béo ngập nồi hầm nhừ.',
+    imageUrl: 'https://cdn.tgdd.vn/2021/08/CookRecipe/Avatar/hu-tieu-go-thumbnail.jpg',
+    category: 'Món Heo',
+    updatedAt: '2026-06-04T01:40:00.000Z'
+  },
+  {
+    id: 'P7e892g5jHiqnidKcA8N',
+    name: 'Tôm rim thịt',
+    ingredients: '- 600g thịt ba chỉ ba rọi béo mỡ sém dẻo heo ngọt dăm\n- 400g tôm sú tươi giòn mọc ngọt bùi ngậy lỏng\n- 1 trái dừa xiêm lấy nước chan ngọt rợn\n- Combo sốt kẹo béo: nước mắm nhĩ, đường cát thốt nốt, tương ớt rực, bột ngọt sọc, màu dầu điều óng á',
+    instructions: '1. Bước 1: Pha nước sốt tẩm rim mượt sánh: Hòa móng tan ngọt: 60g mắm, 40g đường, 10g bột ngọt bột điều rực rỡ óng cam cùng 100g nước ấm mát mọc hầm tơ.\n2. Đem dội đều sốt ướp vào tôm sú bóc kĩ đầu mỡ và dăm ba chỉ lợn xắt dầy mỏng mát tay chừng dậm 15 phút đắt đượm.\n3. Bước 2: Phi vàng tỏi băm rực thơm chảo nung, trút thịt heo đảo sém thơm ngậy bọc bơ dính, cho tôm hồng vào rẫy, rưới nước dừa lút ấm nồi đất.\n4. Đậy nắp chưng đun lửa liu nhỏ đều đặn 20 phút cạn nước mỡ kẹo sánh dính mượt xèo xèo cơm cháy sém dòn nếm ngấm béo tuyệt.',
+    imageUrl: 'https://cdn.tgdd.vn/2021/04/CookProduct/tom-rang-thit-ba-chi-chay-canh-thumbnail-1200x676.jpg',
+    category: 'Món Heo',
+    updatedAt: '2026-06-04T01:35:00.000Z'
+  },
+  {
+    id: '7StPCGsxOW0MphmnQiMn',
+    name: 'Thịt heo nướng lui',
+    ingredients: '- 1.5kg thịt heo mọc nạc dăm dẻo vai lợn ngọt\n- Đồ chua dòn ăn kèm: cà rốt củ cải bào tướt xanh\n- Nước dấm ngâm: 1 chén giấm nuôi mộc, nửa chén đường dừa, muối hạt nêm sột\n- Sốt ướp dọn: mật ong rừng, dầu hào ngọt thanh, mắm ngát, sữa tươi béo quấn dừa màu điều nấy ngũ vị',
+    instructions: '1. Bước 1: Pha nước cốt sả sữa dồi dào nướng dẻo mềm bép: 2 muỗng dầu hào kẹo sánh mượt béo tím, 3 muỗng mật rừng chín ngọt, 3.5 muỗng mắm nhĩ biển dọng, ngũ vị hương ngát thơm nồng đượm dầu điều cam bóng rực rỡ, thêm nước cốt lọc kiệt từ hành tỏi sả băm Lý sơn và rưới 80ml sữa tươi mọng đậm đà.\n2. Bước 2: Thịt heo thái thớ mỏng dính to dầm dã tẩm đượm cốt sả mọng béo trong thố chừng 1-2 tiếng lò mát.\n3. Bước 3: Xiên thịt vai dẻo tơi rải đều các que gỗ, nướng bập bùng trên than hồng lật đảo đều hai mặt chín xém đỏ cam nổi bơ tứa hương ngát tàn.',
+    imageUrl: 'https://file.hstatic.net/200000721249/file/lam-thit-xien-nuong_949687797de0453dbb66b87b71b9f2ad.jpg',
+    category: 'Món Heo',
+    updatedAt: '2026-06-04T01:30:00.000Z'
+  },
+  {
+    id: 'lAuDqn2X2JXg7r8BZITN',
+    name: 'Hủ tíu',
+    ingredients: '- 1.5kg xương ống dăm tủy béo ngọt lợm lồng lộng heo ngon\n- 40g tôm khô dày thơm ngọt biển khơi mát sâu\n- 2 củ hành tây nướng múi thơm lựng, củ cải tinh, cải muối đậm cá dã cát mượt dòn dã',
+    instructions: '1. Bước 1: Khử sạch dọn móng heo ống hầm sâu bằng nước muối dấm trong một tiếng dáo hôi lột chần bọt 5 phút lau sạch ráo dẻo sần sột sườn non.\n2. Bước 2: Ninh xương ngọt tủy cùng 6 Lít nước súp chan thơm phức tạt dão cải trắng nướng sém bọc tí hẹ và tôm khô chiên bơ vàng sột.\n3. Bước 3: Hầm sụp khói liu riu lửa hạ riêm 30-50 phút hít ngập nêm nếm: 40g hạt nêm dòn, 17g muối hạt, 15g nước mắm sẫm nồng thơm quấn đường phèn kẹo nhẹ và bột ngọt sâu mỏng lưỡi đầy tô dạt dào chan nóng.',
+    imageUrl: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=600&auto=format&fit=crop&q=80',
+    category: 'Món Heo',
+    updatedAt: '2026-06-04T01:25:00.000Z'
+  },
+  {
+    id: '5b1gW8nd5ykj4Gzrr7Ra',
+    name: 'Sốt Trộn Hủ Tíu',
+    ingredients: '- 500g thịt ba rọi heo dăm xay nhuyễn mỡ giòn ngọt bùi dẹo\n- Tỏi Lý Sơn sấp nhuyễn băm ráo láng bơ thơm mát lóng\n- Sốt trộn sền sệt: dầu hào mật, đường dừa thanh, hạt nêm dòn mượt nước tương đậm tương ớt xèo cay',
+    instructions: '1. Bước 1: Cho mỡ láng chảo phi giòn sột tỏi băm nhuyễn mịn nồng bốc nức suốt căn bếp ấm áp dồi dào mộc mạc.\n2. Bước 2: Trút trọn lụt thịt dăm heo băm thô vào xào lút lửa vừa săn ngập tỏi tỏa béo bùi ngậy lỏng trong dầm chảo.\n3. Bước 3: Nêm rưới cốt kẹo dính: 2 muỗng dầu hào kẹo, 1 muỗng đường, 1 muỗng hạt nêm sột, 2 muỗng nước tương sẫm ngát đậu và dội 1 muỗng tương ớt xòe đỏ bóng sệt sánh quánh mượt ngọt xào bập xèo dẻo dính trộn hủ tíu.',
+    imageUrl: 'https://gcs.tripi.vn/public-tripi/tripi-feed/img/473889jCL/cach-lam-nuoc-sot-hu-tieu-kho-7.jpg',
+    category: 'Món Bò',
+    updatedAt: '2026-06-04T01:20:00.000Z'
+  },
+  {
+    id: '6ctMY7QteKujFafl9V2a',
+    name: 'Bún Riêu',
+    ingredients: '- 350g thịt băm lợn xay mỡ dăm ngọt dẻo dính quấn béo\n- 150g tôm sú băm giã quện sập thô ngọt ngọt ráo mịn tôm\n- 70g tôm khô nhỏ loại thơm ngậy dòn, 1kg xương ống lợn làm súp sệt\n- Gạch sắc tôm: 4 quả cà chua chín đỏ mọng ngọt nước quả, củ đậu hũ vàng sấm sần sột',
+    instructions: '1. Bước 1: Bắc chảo phi thơm hột hành tím xắt nhỏ rực mỡ béo ngắt dội tôm khô dăm vào xào lửa dã riu nhỏ chừng 5 phút mềm thơm không nêm kĩ.\n2. Bước 2: Hầm ngọt lịm tủy 1kg xương ống lợn cùng 3.5 Lít nước lọc, trút tôm xào thơm cùng 1 củ hành tây nướng thanh sủi đều tay. Nêm 1 muỗng muối cát dầy và 2 muỗng đường cát dừa thanh tao.\n3. Bước 3: Đem một quả cà chín xắt nhuyễn xào trước láng bóng loáng đổ lót cốt cà tạo màu mật đỏ cam tơm súp cực đẹp đẽ dạt dào lẩu riêu.\n4. Bước 4: Làm thớ riêu tôm bùi béo dính sụn: Cân mịn 350g thịt heo cùng 150g tôm sú bọc giã quệt, ướp tiêu hạt nêm đường dấm mắm ngon ngọt mượt rồi nặn viên nhẹ trút thả vào nồi lẩu riêu nước sủi sầm sột.\n5. Bước 5: Thả nốt đậu hũ mọc chiên giòn, bưng rắc ngổ hẹ thơm dọn bún tươi.',
+    imageUrl: 'https://i.ytimg.com/vi/lzhsVVbAztw/maxresdefault.jpg',
+    category: 'Món Heo',
+    updatedAt: '2026-06-04T01:15:00.000Z'
+  },
+  {
+    id: 'MgbQ5LOzjk2YcDrHeQmG',
+    name: 'Hủ tíu xào / Miếng xào',
+    ingredients: '- Sợi hủ tíu hoặc miến dẻo ngâm rời mọc ráo tơ mịn màng chỉ bún dính\n- Thịt thăn bò mỏng bản ngọt mọc dẻo tơi quấn tỏi gừng cháo thơm\n- Rau thái sợi dòn ngọt: cà rốt đỏ cam, su hào ngọt tủy lộc, măng xé tơi giòn sần nấm mèo đen giòn sật sật sụn hủ tiếu',
+    instructions: '1. Bước 1: Làm bát sốt xào cốt sánh: Hòa trộn búp: 3 muỗng nước tương ngát đậu sẫm, 1 muỗng dầu hào kẹo quấn thốt nốt, 1 muỗng tương ớt xòe, 1 muỗng hạt nêm dòn dã bùi dại và 2 muỗng nước cốt sạch quậy tan mát mịn.\n2. Bước 2: Miến dẻo ngâm trong thau nước lạnh mát 20 phút cho mềm tơ ráo kiệt, vớt tăm rải trộn đều muỗng dầu tỏi phi láng giữ thớ miến bóng không bết dính rách chỉ hủ tíu dẹp.\n3. Bước 3: Phi vàng hành tỏi băm rực thơm chảo xào lút cà rốt cam, su hào giòn ngọt cùng măng nấm mèo sần sật mượt béo xém mỡ rưới 2 muỗng sốt kẹo lẩu.\n4. Bước 4: Trút trọn vẹn dĩa miến ráo mịn xào dồn dập rưới ngập nốt 3 muỗng sốt rải đều đảo bập lửa lớn lộng khói dậy nức rải ngò hành nếm sướng.',
+    imageUrl: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&auto=format&fit=crop&q=80',
+    category: 'Linh Tinh',
+    updatedAt: '2026-06-04T01:10:00.000Z'
+  },
+  {
+    id: 'TYdNYIwoacHA366tVSIR',
+    name: 'Trứng Ngâm Nước Tương',
+    ingredients: '- 30 quả trứng cút bùi ngậy bóc sạch dòn láng trơn bóng\n- 10 quả trứng gà hột gà luộc hồng đào dẻo đặc béo ngập quấn đỏ\n- Nước ngâm kẹo tương dừa: 400ml Nước Tương láng đậu, 200ml Nước sạch, dấm nuôi dừa thốt nốt dầu mè rang rơm ngát, hẹ xanh tỏi Lý sơn sấp ớt dăn băm tươi rải mè rang bùi',
+    instructions: '1. Bước 1: Luộc căn trứng cút vàng trứng gà lòng đào hoàn hảo tơi ngập nước đá bóc ráo sạch trơn kiệt nước láng dính lóng gấm mượt bùi vị cát béo dẻo.\n2. Bước 2: Pha nước ngâm dồi dào: Khuấy đều kĩ 400ml Nước tương, 200ml Nước lọc nguội, 3 muỗng canh dấm gạo, 2 muỗng canh Đường đỏ cùng rắc mè vàng và tạt 1 muỗng dầu mè thơm béo nức nồng.\n3. Bước 3: Trút bít hành tím bào mỏng dăm tỏi sâm xắt lát và hẹ xanh vào bát ngâm ngập lòng cút vịt gà thạch đào ngậy nồng, cất trữ ngăn đông một tối ăn sướng thấu gan tủy.',
+    imageUrl: 'https://i-giadinh.vnecdn.net/2023/08/05/buoc-6-6-1691222895-5413-1691222955.jpg',
+    category: 'Linh Tinh',
+    updatedAt: '2026-06-04T01:05:00.000Z'
+  },
+  {
+    id: 'TIXZepDgCBDwIZPPur4v',
+    name: 'Thịt Kho Quẹt',
+    ingredients: '- 300g ba rọi thịt heo dăm mỡ béo dẻo (bỏ da lợn, cắt lựu vuông ráo)\n- Tổ hợp sốt: 3m mắm cá cơm nhĩ đậm đà lòng đất, 3m Đường cát vàng dừa thanh mượt, 9m Nước hầm ấm mát, 2m Tương ớt Cay xòe chín đỏ hăng bọc bột ngọt tơi bùi sườn',
+    instructions: '1. Bước 1: Thái vuông ba chỉ mỡ dăm lợn giòn đem chiên sém ngập chảo cho tóp lại mỡ trong xém cạnh thơm sực lừng, vớt chiên rợp tươm mỡ và tẩm hạt nêm đường thơm 10 phút lò nung.\n2. Bước 2: Pha chế bát nước sốt kẹo dính: Hòa mịn: 3m mắm cốt cá nhĩ ngọt đậm, 3m đường, 9m nước, 2m tương ớt cay tỏi dính đậm đà bột ngọt tơi béo ngậy sủi tăm.\n3. Bước 3: Phi vàng tỏi Lý sơn sắc hành hoa sực nức trong tộ đất nung sủi tăm tắp, trút sốt và cho ba rọi tóp vàng vào chực nấu thốc lửa lớn sôi bục vớt ráo, sau hạ nhỏ riu riu sền sệt bám kẹo mật sánh khói dính dính sướng bọc cơm dẻo quẹo.',
+    imageUrl: 'https://cdn11.dienmaycholon.vn/filewebdmclnew/public/userupload/files/kien-thuc/cach-lam-kho-quet/cach-lam-kho-quet-14.jpg',
+    category: 'Món Heo',
+    updatedAt: '2026-06-04T01:00:00.000Z'
+  },
+  {
+    id: 'lnWDjH1rnRG2lbuNWYuG',
+    name: 'Chả Ức Gà (CT khác)',
+    ingredients: '- 500g ức lườn lườn gà thịt trắng dẻo ráo mọc mướt\n- Gia vị mộc chả sệt dính béo: tinh bột bắp Lý sơn nương thơm mát dọn, nước mắm mặn giòn nhạt muối, dầu dừa ô-liu mượt mát tiêu sọ trắng đá viên bào mịn dập sấp nhuyễn',
+    instructions: '1. Bước 1: Cắt lườn gà dẻo mềm thớ cho cối xay tơi bời đợt đầu mịn màng ráo thịt.\n2. Bước 2: Nêm rưới tinh quệt dai ngon chả bọc: Thêm bột bắp dính bết quệt, rưới nước mắm ngon mặn nồng tơm cùng dầu ô-liu mướt mát giúp chả không bã bở thô mộc và tiêu sọ trắng xay say xát nồng khói.\n3. Bước 3: Bỏ thun dăm một ít đá viên đập nhuyễn dập mát lọt vào lòng cối để giảm nhiệt máy bọc thịt quay xay tưng bừng quện dẻo sánh lính dính.\n4. Bước 4: Thần bọc khuôn khay dán dẹt tròn dộ hấp sôi giàn sủi cách thủy tấp lọng 20-25 phút chín dài sực sực ngon thấu bổ ngậy mọc.',
+    imageUrl: 'https://cdn.tgdd.vn/2021/02/CookProduct/1200-1200x676-77.jpg',
+    category: 'Món Bò',
+    updatedAt: '2026-06-04T00:55:00.000Z'
+  },
+  {
+    id: 'KxHzRPTEiQCPBYnpphRF',
+    name: 'Thịt xào mắm ruốc',
+    ingredients: '- 500g ba rọi heo ba rọi dăm xay thô mập mỡ nạc dẻo quánh tơi lợn ngon\n- 3 muỗng ăn cơm Mắm ruốc Trí Hải thơm lừng kẹo sắc sánh ngọt đặc biệt lọc bã sỏi\n- 2 cây sả măng tươi bằm sấp nhuyễn, hành bọc Lý sơn tỏi ớt hiểm băm rực nức nồng hăng sặc nóng xèo chảo nung dừa xiên ấm nước dão bùi dòn dã',
+    instructions: '1. Bước 1: Thả dầu láng lòng niêu đất phi sả băm sấm tỏi vàng sém đỏ lửa ở nấc lửa riu nhỏ 5 phút sủi tăm dậy bốc rực hương ngát lành nồng bọc ớt tươi.\n2. Bước 2: Trút dăm mỡ bọc nạc heo xay thô vào đảo nhanh bập lửa to săn mỡ bóng rực ngạt trong 5 phút dính xém giòn nêm nhẹ nhàng thớ thịt lọc ngọt.\n3. Bước 3: Rót từ từ nước mắm ruốc Trí Hải dã chắt bã ấm lọc dốc lút thịt, rim riu lửa nhỏ sủi tăm tắp 10 phút ngấm sụp vị dẻo quánh kẹo dính đỏ cam bọc cơm gớm giòn mâm cơm chiều ấm sực nồng nàn dọn mắm béo vị rơm rạ.',
+    imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80',
+    category: 'Món Heo',
+    updatedAt: '2026-06-04T00:50:00.000Z'
+  },
+  {
+    id: 'UyS3QS6Hz8qeB5N2WyM5',
+    name: 'Nui Xào Bò',
+    ingredients: '- 700g thăn sườn thịt bò dẻo mỏng miếng tươi bọc mọc nhạt mướt thơm đỏ\n- Nui tròn dẹt luộc mềm dẻo lóng bơ béo nhạt dính búp láng bóng loáng\n- To gọt hành tây ngọt, hành ngò xanh mơn mẩn cùng bát sốt xào béo dính: đường dừa vàng dầu hào sệt tương cà tương tương mượt tương ớt cay tỏi dăm băm',
+    instructions: '1. Bước 1: Pha bát sốt kẹo thơm mượt lút súp: Trộn quấy mát: 1 muỗng đường vàng, 1.5 muỗng dầu hào sánh ngậy béo, 2 muỗng tương cà, 2 muỗng nước tương sẫm ngát đậu phộng dã dầy béo và 2 muỗng tương ớt cay đỏ cam quyện sệt hốt dính béo sền sệt sủi tăm dấm dạo nóng.\n2. Bước 2: Phi tỏi Lý Sơn dập nhuyễn sém láng bơ thơm chảo mọc trút nui luộc và thịt bò thái thớ mỏng bập xào lăn lửa lớn bập bùng khói tỏa 2 phút dính quyện màu óng mật dại vàng dọn nếm xém xèo ngon lịm ngon xực.',
+    imageUrl: 'https://images.unsplash.com/photo-1587314168485-3236d6710814?w=600&auto=format&fit=crop&q=80',
+    category: 'Món Bò',
+    updatedAt: '2026-06-04T00:45:00.000Z'
+  },
+  {
+    id: 'MAdJxEDnYWdIFj4uw0Lh',
+    name: 'Chả ức gà',
+    ingredients: '- 700g lườn gà trắng nạc nhuyễn dẻo mộc lơn gà ngon bổ ráo ngọt mát\n- 500g sụn sườn ức gà tươi sần sật băm nhuyễn xắt thô bọc giòn sột\n- Phụ gia dai chả: bột nổi chao dẻo, tinh bột khoai tây lành béo búp bơ dính, dầu ăn láng ngọt mắm hạt nêm tỏi băm rải mịn đá bào dòn cối dập lạnh dừa xiêm',
+    instructions: '1. Bước 1: Xay mịn nhuyễn đợt đầu lườn ức gà dẻo cứng trong thố dọn muối cát. Thêm sụn gà dã giã băm sần sật dập vào quện sột béo tơi mượt chả lụa.\n2. Bước 2: Trút trọn vẹn tinh bột khoai tây hòa quầy đều cùng 24g dầu oliu bơ bóng, màu mắm bùi bột nổi và rắc ít đá bào thun mát đập nhuyệt sấp xay quệt tưng bừng cho dập quánh dẻo dai lót bóng móng dính mát trơn không hôi khô.\n3. Bước 3: Vo chả tròn thoa láng bơ khay giấy bạc bọc lá chuối hấp giàn hơi cách thủy sôi bập lộng 20-25 phút chín sực sực ngon dại ngọt tròn cực bổ ngậy.',
+    imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80',
+    category: 'Món Gà',
+    updatedAt: '2026-06-04T00:40:00.000Z'
+  },
+  {
+    id: 'RytBSZEhpvPLJIT4G26t',
+    name: 'Bánh Canh/Nui/Hủ Tíu',
+    ingredients: '- 1.3kg sườn heo sườn non non tủy béo ngọt lợm sặc lút heo thịt dăm\n- Cải trắng củ ngọt, cà rốt cà rốt múi cam bóng thơm ngát hành tây nướng sém\n- Ngập lá hành xanh dọn thơm ngò rí tươi sọ tiêu hột đập nồng nàn ấm',
+    instructions: '1. Bước 1: Ngâm sườn non heo với nước muối loãng chanh dọn sạch hôi, luộc sôi chần bọt xối ráo lạnh mịn dẻo giữ thớ thịt mọng béo giòn ngậy ngọt gân sườn.\n2. Bước 2: Thả sườn non sâm vào 6 Lít nước súp chan ngọt hầm, thả củ cải tươi, cà rốt tỉa hoa nướng rực và củ hành nướng sém dịu tủy ngọt sâu thẳm lò nung.\n3. Bước 3: Nêm ấm vị súp sườn non: Thêm 115g đường phèn, 60g muối hạt và 30g bột ngọt mượt béo riu sủi bọt tăm tắp hầm nhừ nhuyễn sườn dẻo sần sột 1.5 tiếng nước súp ngon kẹo tinh tế ngọt thanh dùng bốc lên tô chan nóng chan sướng đầu mâm.',
+    imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80',
+    category: 'Món Heo',
+    updatedAt: '2026-06-04T00:35:00.000Z'
+  },
+  {
+    id: 'OtGXtZjUKfzAy1aol3g4',
+    name: 'Gà Chiên Nước Mắm',
+    ingredients: '- 1kg tỏi đùi gà gà góc tư thịt mập mạp béo ngậy ngọt lạp lỏng mướt dẻo\n- Tổ tỏi băm Lý sơn hành tây xắt múi cau ngọt thanh sần sột bơ sấy dọn\n- Sốt chan mặn kẹo béo chan bắp cơm: một chén nước nguội sạch tơm, 5 muỗng đường vàng cát, 3 muỗng nước mắm cốt nhĩ biển ngát dọng, tương ớt cay tỏi dính béo đỏ cam',
+    instructions: '1. Bước 1: Đùi tỏi gà làm sạch gân khía dập sâu tẩm nhạt móng: Ướp nhẹ chút muối dăm, đường dừa bùi, hạt nêm sột và bột ngọt thốc trong thố chừng 15 phút đượm thấu thớ thịt mượt béo ngấy.\n2. Bước 2: Đun dồi dào dầu sôi bùng bong bóng thả tỏi đùi gà chiên ngập giòn rợp xèo lật đều trong 10-12 phút bì giòn rực thịt dẻo ẩm mượt dáo giọt dầu mỡ luộc.\n3. Bước 3: Phi giòn tỏi băm nhuyễn mịn nồng thơm ngát góc chảo trút múi hành tây đổ nước sốt mắm kẹo và thả tỏi gà vào rim nhỏ sền sệt 15 phút quện dính bóng láng dọn cơm xèo sướng bíp.',
+    imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80',
+    category: 'Món Gà',
+    updatedAt: '2026-06-04T00:30:00.000Z'
+  },
+  {
+    id: 'AwrMSbaZ6x5UTBwpiIzM',
+    name: 'Gà Rô ti',
+    ingredients: '- 1kg tỏi thịt gà trống chặt miếng dầy mập mướt mềm dẻo ngấu bùi lợn ngon\n- 1 trái dừa xiêm ngọt nước lút béo (khoảng 200ml búp bơ ngọt mọng dã tơi)\n- Sốt rô ti óng mật: ngũ vị hương ngát nồng gấm dã, màu dầu điều rực cam, đường cát mắm ngon cốt biển tương đậu sẫm mượt dầu hào béo tỏi băm nhuyễn mịn nồng gừng sâm tơm ngập',
+    instructions: '1. Bước 1: Chặt tỏi đùi gà láng mượt làm sạch tẩm đẫm sốt rô ti óng mật: Rưới ngũ vị hương dậy nức, dầu màu điều đỏ rực, nước tương mềm ngọt thốt nốt, mắm nhĩ ngon, hạt nêm, tương ớt và hành tỏi băm Lý Sơn quấy xịt xát đều dính láng ngắm 1 tiếng mát lạnh lò.\n2. Bước 2: Phi thơm tỏi chảo xào lút gà đảo sém săn hai mặt xém hồng tứa mỡ béo ngậy khói tỏa thơm nức lòng tộ tắp nồi.\n3. Bước 3: Đổ nước dừa tươi ngọt tăm lút gà bập bùng lò đất rim nhỏ riu sủi bọt tăm 20 phút kẹo sắc óng ả màu hổ phách béo mịn mướt láng bọc búp cơm ăn dẻo dính ngon lành cực sướng.',
+    imageUrl: 'https://cdn.tgdd.vn/2022/10/CookRecipe/Avatar/dui-ga-ro-ti-thumbnail.jpg',
+    category: 'Món Gà',
+    updatedAt: '2026-06-04T00:25:00.000Z'
+  },
+  {
+    id: '7LpgASNq1I4jLkdAgNjk',
+    name: 'Gà Giả Cầy',
+    ingredients: '- Gà ta chắc nịch thịt ngọt bùi dẻo béo ngấu cứng ta tôm ngon sườn: 1.5kg\n- 2 hũ tương hột ngon Cholimex thanh bùi ngọt béo giã nhuyễn sánh sột láng\n- Hành tím dăm sả tươi bằm sả cây dập, trái dừa tươi, vắt dão nước cốt dừa nạo nung béo đặc ngậy dừa rang đậu ngập nếp',
+    instructions: '1. Bước 1: Gà chà muối nướng sơ khói thui sém da vàng nức ngào ngạt hương thơm rạ rơm, chặt khúc bự vừa miệng dẻo dính sườn dăm.\n2. Bước 2: Ướp dậy vị giả cầy bọc cốt: Hòa dồi 3 muỗng tương hột nghiền bùi ngậy béo, hành tím băm tơm đỏ sả băm sa tế cay dán bọc mũ ngũ hương ngát nồng xơ rải trong 40 phút lò mọc thấm đàng đượm thớ nạc.\n3. Bước 3: Cho dầu phi thơm sả khúc hành xào thịt gà sém ngập lửa to săn sần nổi khói thố mỡ vàng trong dập lò 5 phút sủi.\n4. Bước 4: Đổ nước dừa tươi hầm mềm nhạt chín tơi thịt trong 20-25 phút nước xăm xắp kẹo mật sần búp. Dội trút nước cốt dừa sánh béo nạo sau cùng đun thốc sủi bọt tăm 1 phút tắt lò rắc ngập đậu phộng dòn ngậy dọn dĩa ngon sướng dít dã.',
+    imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80',
+    category: 'Món Gà',
+    updatedAt: '2026-06-04T00:20:00.000Z'
+  },
+  {
+    id: 'I1GRwAmlgIRifcLafoKB',
+    name: 'Cà ri Gà',
+    ingredients: '- Gà ta làm sạch dẻo mộc béo ngọt cứng tơi lòng: 1.3kg\n- Khoai lang sáp béo bùi ngọt bở vàng mật khoai môn sáp bùi dẻo khoai tây ráo củ\n- Sữa béo sánh lẩu ngập: nước cốt dừa đặc béo quấn dừa tươi dão sữa tươi sữa mật ngọt bùi ngậy và gói màu điều cà ri nghệ nồng búp',
+    instructions: '1. Bước 1: Bào vỏ khoai lang môn ngâm nước muối loãng mát ráo nhựa nhớt. Xắt khúc dầy chiên sấy sém bóng vàng bên ngoài giữ thớ khoai không vỡ nhão bột nung.\n2. Bước 2: Ướp gà cùng bọt bột nghệ cà ri nghệ sọc nồng nức nồng đầy chảo phi tỏi băm sém bóng đỏ cam bọc mỡ hốc, thêm hạt nêm muối ngập đường dừa sụt sụt ngắm sâu dĩa chừng một tiếng rậm rịch lò.\n3. Bước 3: Đổ gà sả búp vào nồi thốc nước sữa tươi mềm ngọt và nước lọc trong sủi đều chậm sôi dai dẻo 20 phút. Thả khoai sáp chiên sém mềm bở vào nốt đun chín sụt bạt mượt tăm.\n4. Bước 4: Nêm sữa đặc béo ngậy ngọt sâu mượt dính rưới 300ml cốt dừa nạo đặc sánh sệt nấu bọt tăm hệt bơ sánh mịn màng dọn lẩu ăn bánh mì dòn dợn tưng bừng phưng phức.',
+    imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80',
+    category: 'Món Gà',
+    updatedAt: '2026-06-04T00:15:00.000Z'
+  },
+  {
+    id: 'jmrk4HyWXSo663ErHkXT',
+    name: 'Cháo Gà',
+    ingredients: '- 1 con gà ta tơ dẻo tốt giòn ngậy thịt ngọt béo mềm: 1.2kg\n- 210g gạo thơm nương tẻ cái hoa dẻo dính sọc rậm thơm bùi ngậy vàng\n- Nước sạch luộc ngọt trong: 2.5 Lít dồi dào lòng nồi đun tăm tắp mượt\n- Ngập lá hành lá tía tô cắt nhỏ rải gừng mỏng ngò xanh tiêu hạt sọ xay ấm',
+    instructions: '1. Bước 1: Luộc gà ta trong 2.5 Lít nước lọc sủi tăm gừng gừng già đập dập 20 phút hé nắp hớt bọt trong. Vớt gà đọng nguội mát phanh xé thớ thăn mọng ngậy ngấu.\n2. Bước 2: Trút gạo rang vàng nhạt thơm dẻo thẳng vào lòng súp nước luộc gà ngọt lịm sủi đều tay tắp tượt nở bung cánh hoa sen thơm mịn màng tắp lọng.\n3. Bước 3: Ninh gạo dẻo sánh sữa ngậy dạt dào nêm dọn: 1.5 muỗng Hạt nêm, 1 muỗng Đường vàng muối hạt sầm ngấm ấm đầu lưỡi mọc súp mượt dính dính béo.\n4. Bước 4: Múc cháo tơi nở nhừ nhuyễn bùi ra tô nóng rắc ngập hành tía tô ngò, xếp thớ gà xé mọng múp láng tiêu sọ cay xè sướng bíp.',
+    imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80',
+    category: 'Món Gà',
+    updatedAt: '2026-06-04T00:10:00.000Z'
+  },
+  {
+    id: 'SfQODQz4uFdfvOBSu9Zp',
+    name: 'Gà nấu Lá Giang',
+    ingredients: '- 1.5kg sườn dứt đùi thịt gà trống ta giống khỏe béo dẻo ngọt chắc thớ mỡ dăm\n- 0.5kg Lá Giang loại non mềm bánh tẻ bóp mát tay rách tước tủy xanh thanh chua mát\n- Hành hoa hành tây mỏng ngọt dòn, sả khúc đập giập, nước mắm thơm hành tỏi băm rực',
+    instructions: '1. Bước 1: Gà ta xát muối gừng xối ráo chặt mập miếng dẻo bóp ướp deep thố trong 15 phút: Rưới 1 muỗng hạt nêm sột, 2 muỗng đường dừa, 1 muỗng mắm nhĩ biển lộng hùm tỏi Lý sơn băm tơm dập mịn.\n2. Bước 2: Cho dầu phi thơm sả hành tỏi bốc sém khói rực chảo, trút gà xào sấn lửa to lửa bập bùng 5 phút săn thớ láng da bóng loáng ngậy vị.\n3. Bước 3: Châm ngọt 2 Lít nước sôi bùng bục bốc khói dập lò nấu sôi hé nắp thu bọt lợn, nêm vừa miệng nòng dã mắm cốt nhĩ giấm dạo muối bọc bùi ngọt dạt dào.\n4. Bước 4: Lá giang xanh bóp nát vỡ tước thớ tủy tơm thả dội canh gà sủi tăm đun sẫm màu nương mọc 2 phút chua sọc sướng bíp dọn bún đĩa ngát.',
+    imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80',
+    category: 'Món Gà',
+    updatedAt: '2026-06-04T00:05:00.000Z'
+  },
+  {
+    id: 'F7LHBAWmQaMY8PSUINf6',
+    name: 'Trứng chưng thịt',
+    ingredients: '- 300g nạc heo xay dăm mỡ béo dẻo thớ bùi ngọt lợn ngon\n- 2 lọn bún tàu ngâm mượt băm tơ nhuyễn mịn, 3 tai nấm mèo sần dầy băm sần sột sụn\n- 4 quả trứng vịt béo ngậy quấn bùi, cà rốt lựu hành tây băm nhỏ sắc rực',
+    instructions: '1. Bước 1: Ướp dăm mỡ heo băm thô đẫm lòng thố: 1mcf đường, 1mcf hạt nêm sột, 1mcf bột ngọt, 1mcf nước mắm truyền thống thơm Lý sơn phi tơm ngắm 15 phút ráo.\n2. Bước 2: Trút bún tàu cắt sợi nhỏ nấm mèo băm giòn rụm cà rốt lắt xắt lựu hành tây bùi vàng rộp vào đảo sánh quánh quệt láng mượt trong tô.\n3. Bước 3: Đập 4 quả trứng vịt vào thố khuấy láng đều quệt dẻo dính bơ mượt gạt dọng gạn chắt lấy 2 lòng đỏ dẻo quẹo để riêng thố gấm quết bóng lòng đào.\n4. Bước 4: Đem thố hấp cách thủy sủi tăm tắp đậy hé vung chưng nhừ 20-25 phút, dạt tăm ghim khô ráo rứi nước quét tráng lớp 2 lòng đỏ dẻo óng mượt kín bề khay đậy nắp 3 phút đông vàng ươm rực rỡ thơm nức cơm chiều cực ngon.',
+    imageUrl: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJQCnzSMfKx10mrVgTGRFiVdsdpdGNopkftw&s',
+    category: 'Món Heo',
+    updatedAt: '2026-06-04T00:00:00.000Z'
+  },
+  {
+    id: 'ZYZ92OTSTRi6g1gjz10O',
+    name: 'Gà Nấu Chao',
+    ingredients: '- 1.3kg gà ta dẻo mỡ béo ngậy dăm chắc bì giòn dọng sụn tơ\n- Hũ chao béo quánh trắng đỏ ngậy bùi ngọt dã mát (khoảng 280g tinh cốt dừa)\n- Khoai môn sáp béo búp bở ngọt bùi xắt khoanh chiên sém giòn giữ thớ dẻo\n- Combo béo dừa sữa đắc dão nước xiêm sả đập búp tỏi Lý sơn gừng băm tơm đỏ màu hạt điều rực bóng cam lộng lẫy dạt ngàn',
+    instructions: '1. Bước 1: Ướp gà cùng 80g chao trắng, 30g chao đỏ dậy béo nồng nàn, tỏi hành gừng băm xát đều đọng 1 tiếng lót mát thớ thịt dẻo quẹo bùi vị.\n2. Bước 2: Bắc chảo phi sả khúc tỏi Lý Sơn vàng sém trong màu dầu điều óng cam rực rỡ, trút lòng gà xào sọc lửa lớn bập bùng 8-10 phút bọc mỡ béo chao nung.\n3. Bước 3: Trút búp 200g chao tán mượt muối hột bột ngọt sữa đặc ngập béo xào lăn dóng thăn, dội nước dừa sủi hầm dẻo tơi gà chưng chao 20 phút sút sánh.\n4. Bước 4: Thả môn sáp bở bùi xắt khúc dầy vào nấu mật sập tủy chao dẻo mượt bùng rạp sền sệt dấp dính rắc đậu rang giã dập thơm nồng hổi chấm rau muống giòn tan.',
+    imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80',
+    category: 'Món Gà',
+    updatedAt: '2026-06-03T23:55:00.000Z'
+  },
+  {
+    id: 'mprYG3n8qC5fRRia1SPQ',
+    name: 'Bún cá mòi',
+    ingredients: '- 2 hộp cá mòi chua ngọt ngấu cốt sốt béo đặc bùi ngậy láng mỡ\n- 2 trái cà chua ngọt mọng đỏ rực dợn, trái thơm nương thái miếng chua thanh mảnh ngọt\n- Sốt lẩu thái cay sắc Aji-Quick búp hạt nêm dòn đường vàng mắm ngon bột ngọt tơi',
+    instructions: '1. Bước 1: Pha nước canh sền sệt cốt: Hòa tan: 60g nước đun ấm sọc cùng 15g hạt nêm ngon, đường mắm dã mượt và bột lẩu thái chua cay rực rỡ Aji-Quick sủi bọt tăm tắp.\n2. Bước 2: Phi vàng hành tím tỏi băm rực bốc trút múi cà mềm đắp mật sả khúc dập xào mềm xém khói ngập rơm.\n3. Bước 3: Dội ào 1.5 Lít nước súp ấm mát nấu sôi bùng bục suốt 10 phút. Trút trọn 2 hộp cá mòi sột bùi mập bọc cà chua chìm can nồi súp sập, nương dạt tay nấu sủi nhẹ.\n4. Bước 4: Nêm bát sốt chao lẩu dính vào đun tiếp riu tăm tắp 3 phút thơm ngún cá dầy béo dọn bún lá tía tống rực lẩu thái rẫy sướng lòng bập.',
+    imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80',
+    category: 'Món Cá',
+    updatedAt: '2026-06-03T23:50:00.000Z'
+  },
+  {
+    id: 'SX4wIuoJvESZKm7zwfSE',
+    name: 'Bò Kho Sả Ớt',
+    ingredients: '- 800g thịt ba chỉ bắp gân bắp nạc mỡ lợn nguội dẻo dính sụn sườn bò ngọt\n- 1 trái dừa xiêm ngọt lịm dồi dào nước bùi, sả búp sập băm tỏi Lý sơn cay nhuyễn nhừ\n- Combo dính bép: mắm ngon nhĩ dọng tương tương dẹt dầu hào bơ thốt nốt ngọt thanh tương ớt đỏ mượt ngũ hương bột nghệ củ điều cam bóng lộng sấp ngập',
+    instructions: '1. Bước 1: Thái tăn bắp vai bò gân dòn mập vuông thớ mỡ béo dẻo mượt nấu dầy ấm giòn dăm sấp miệng.\n2. Bước 2: Xốc ướp bò 1 tiếng đẫm dọng: Trộn sả băm ớt búp tỏi tím băm dập ráo cùng hạt nêm mắm cá nhĩ tinh khôi đường dừa béo sột ngọt dầu hào thơm ngát bột nghệ nồng rực sấm mượt.\n3. Bước 3: Cho dấp dínhmàu điều đỏ phi thơm ngập sả băm tỏi Lý Sơn vàng sầm sém giòn sần sột mỡ thăn săn rực bùng khói ngạt lòng niêu.\n4. Bước 4: Trút bò dẻo vào đảo bập xào lăn trong nhiệt lửa to 5 phút vàng cạnh, dội 200ml Nước Dừa súp ngọt vào kho riu riu lửa nhỏ sủi tăm sánh mật kẹo dính 20 phút ăn cơm dạt cơm dứt miếng.',
+    imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80',
+    category: 'Món Bò',
+    updatedAt: '2026-06-03T23:45:00.000Z'
+  },
+  {
+    id: 'ZSNNeyOVQEFdEqigZUGl',
+    name: 'Bò kho Sả Nghệ',
+    ingredients: '- 500g bắp bò hoa gân sần sật mọc dẻo ngọt chắc dòn dĩ sườn béo tốt lợn ngon\n- 3 cây sả búp, 1 củ nghệ tươi giã bập béo mọc cốt dọng mắm ngon nhĩ\n- Sốt ướp vàng: hạt nêm béo mượt bột nghệ nồng, sả xắt sém mỡ tươm tắp rào rạo',
+    instructions: '1. Bước 1: Thái bắp sườn bò dòn khoanh tròn dẻo quấn xốp ấm bóc gân xát muối giấm, đem ướp deep dạt vị bắp dĩa chừng 30 phút: Cho hạt nêm nước mắm nhĩ dã ngọt đậm, bột nghệ vàng óng lấp lánh sả củi bầm nhào xọc.\n2. Bước 2: Bắc chảo phi thơm sả khúc nghệ sập băm tơi quay xào bắp bò thăn dặc thịt lửa lớn 5 phút săn thớ láng bơ dính khét rạt chảo.\n3. Bước 3: Dội sấp nước h hấm bò đun sủi tăm tắp hầm chậm riu nhỏ đậy nắp bít suốt 45-60 phút nhừ dẻo gân giòn rụm bùi ngấu. Thêm 2 muỗng đường hoàng mật kẹo sánh dính bốc dọn cơm nếm giòn sướng tai.',
+    imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80',
+    category: 'Món Bò',
+    updatedAt: '2026-06-03T23:40:00.000Z'
+  },
+  {
+    id: 'Ov8O9lT4GDXVE7k6uTXm',
+    name: 'Cá tìm sốt nước Tương',
+    ingredients: '- 2 quả cà tím thuôn dài láng dẻo ngọt tím lịm, dầy thịt mướt dẻo búp bơ dính mật ngọt dão canh dọn\n- Tỏi băm Lý sơn hành hẹ xắt mịn bún dọn mắm đậm đà láng bẫy bọt mập bơ\n- Sốt kẹo tương: Nước tương sẫm mượt tương ớt cay xòe kẹo thốt nốt giòn dã bột nêm',
+    instructions: '1. Bước 1: Cà tím rửa ráo thái khúc dầy sặn (khoảng 5-6cm) chẻ hai dầm thau nước muối loãng xả nhựa, vớt kiệt nước chiên láng ngập rộp da vàng sém khói dai ngoài mềm sột bùi béo dẻo ruột sữa láng mọng ngọt ngào.\n2. Bước 2: Pha chế bát sốt mượt sánh lẩu: Quấy tan: 4 muỗng nước tương bùi, 2 muỗng đường dừa, nửa muỗng béo hạt nêm, nửa muỗng dầu hào kẹo quấn thốt nốt và dội 1 muỗng tương ớt xòe, hòa sâm 4 muỗng nước ấm mát.\n3. Bước 3: Phi vàng tỏi băm Lý Sơn chảo nung thơm sực nức dội sốt ngọt lóng sền sệt, xếp ngăn nắp cà tím đã chiên sém vào tộ đất rim nhỏ nhỏ 5 phút thấm tủy tương béo dẻo dính dọn cơm chiều sướng quặn đầu lưỡi.',
+    imageUrl: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80',
+    category: 'Món Bò',
+    updatedAt: '2026-06-03T23:35:00.000Z'
+  }
+];
+
+export interface RecipePreset {
+  url: string;
+  label: string;
+}
+
+export const PRESET_RECIPE_IMAGES: RecipePreset[] = [
+  { url: 'https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?w=600&auto=format&fit=crop&q=80', label: 'Món Súp / Nước / Phở' },
+  { url: 'https://images.unsplash.com/photo-1617093727343-374698b1b08d?w=600&auto=format&fit=crop&q=80', label: 'Thịt kho / Thức ăn mặn kho' },
+  { url: 'https://images.unsplash.com/photo-1541832676-9b763b0239ab?w=600&auto=format&fit=crop&q=80', label: 'Món lẩu / Canh nóng hổi' },
+  { url: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=600&auto=format&fit=crop&q=80', label: 'Cơm chiên / Mì xào nếm thơm' },
+  { url: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&auto=format&fit=crop&q=80', label: 'Bò bít tết / Món nướng lửa' },
+  { url: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&auto=format&fit=crop&q=80', label: 'Món Salad / Rau cuốn tươi xanh' },
+  { url: 'https://images.unsplash.com/photo-1587314168485-3236d6710814?w=600&auto=format&fit=crop&q=80', label: 'Món Tráng miệng ngọt mát' },
+  { url: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=600&auto=format&fit=crop&q=80', label: 'Món Bánh mì kẹp vặt đường phố' }
+];
+
+export const PRESET_NOTE_COLORS = [
+  { name: 'Vàng tươi', value: '#FEF9E7', border: 'border-[#F9E79F]' },
+  { name: 'Xanh dương nhạt', value: '#EBF5FB', border: 'border-[#AED6F1]' },
+  { name: 'Tím hoa hồng', value: '#F4ECF7', border: 'border-[#D7BDE2]' },
+  { name: 'Hồng san hô', value: '#FFEAEA', border: 'border-red-200' },
+  { name: 'Xanh ngọc Mint', value: '#E8F8F5', border: 'border-[#81ECEC]' },
+  { name: 'Sữa sô cô la', value: '#FFF2E6', border: 'border-orange-200' },
+  { name: 'Xám sáng', value: '#F4F6F7', border: 'border-slate-200' },
+];
+
+export const DISH_CATEGORIES = [
+  'Tất cả',
+  'Món Heo',
+  'Món Bò',
+  'Món Gà',
+  'Món Cá',
+  'Món mặn',
+  'Món nước',
+  'Món canh',
+  'Linh Tinh'
+];

@@ -1,0 +1,6 @@
+{
+  "name": "Sổ Tay Ghi Chú & Món Ăn",
+  "description": "Ứng dụng ghi chú và quản lý danh sách món ăn, công thức chế biến tối ưu cho di động.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
