@@ -187,53 +187,55 @@ export default function DishFormScreen({ dish, mode, onSave, onCancel }: DishFor
                   {errors.name && <span className="text-xs font-semibold text-red-500 mt-1">{errors.name}</span>}
                 </div>
 
-                {/* B. Category Select Dropdown */}
-                <div className="flex flex-col gap-2">
-                  <label htmlFor="dish-category" className="text-xs font-black text-slate-700 tracking-wider uppercase">
-                    Phân Loại <span className="text-red-500 font-extrabold">*</span>
-                  </label>
-                  <div className="relative">
-                    <select
-                      id="dish-category"
-                      value={category}
-                      onChange={(e) => {
-                        setCategory(e.target.value);
-                        if (errors.category) setErrors(prev => ({ ...prev, category: '' }));
-                      }}
-                      className="w-full text-sm font-semibold text-slate-800 bg-slate-50 border border-slate-200 focus:bg-white rounded-2xl px-5 py-4 focus:ring-4 focus:ring-[#FF7675]/10 focus:border-[#FF7675] outline-hidden transition-all cursor-pointer appearance-none"
-                    >
-                      <option value="" disabled>-- Chọn phân loại món ăn --</option>
-                      {DISH_CATEGORIES.filter(cat => cat !== 'Tất cả').map((cat) => (
-                        <option key={cat} value={cat}>
-                          {cat}
-                        </option>
-                      ))}
-                    </select>
-                    {/* Dropdown Chevron Indicator icon */}
-                    <div className="absolute inset-y-0 right-0 flex items-center pr-5 pointer-events-none text-slate-400">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"></path>
-                      </svg>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                  {/* B. Category Select Dropdown */}
+                  <div className="flex flex-col gap-2">
+                    <label htmlFor="dish-category" className="text-xs font-black text-slate-700 tracking-wider uppercase">
+                      Phân Loại <span className="text-red-500 font-extrabold">*</span>
+                    </label>
+                    <div className="relative">
+                      <select
+                        id="dish-category"
+                        value={category}
+                        onChange={(e) => {
+                          setCategory(e.target.value);
+                          if (errors.category) setErrors(prev => ({ ...prev, category: '' }));
+                        }}
+                        className="w-full text-sm font-semibold text-slate-800 bg-slate-50 border border-slate-200 focus:bg-white rounded-2xl px-5 py-4 focus:ring-4 focus:ring-[#FF7675]/10 focus:border-[#FF7675] outline-hidden transition-all cursor-pointer appearance-none"
+                      >
+                        <option value="" disabled>-- Chọn phân loại món ăn --</option>
+                        {DISH_CATEGORIES.filter(cat => cat !== 'Tất cả').map((cat) => (
+                          <option key={cat} value={cat}>
+                            {cat}
+                          </option>
+                        ))}
+                      </select>
+                      {/* Dropdown Chevron Indicator icon */}
+                      <div className="absolute inset-y-0 right-0 flex items-center pr-5 pointer-events-none text-slate-400">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"></path>
+                        </svg>
+                      </div>
+                    </div>
+                    {errors.category && <span className="text-xs font-semibold text-red-500 mt-1">{errors.category}</span>}
+                  </div>
+
+                  {/* C. Favorite Toggle Switch */}
+                  <div className="flex flex-col gap-2">
+                    <span className="text-xs font-black text-slate-700 tracking-wider uppercase">Yêu thích</span>
+                    <div className="flex items-center justify-between px-5 py-3.5 bg-slate-50 border border-slate-200/60 rounded-2xl h-[54px]">
+                      <span className="text-sm font-semibold text-slate-700">Món ăn yêu thích</span>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input 
+                          type="checkbox" 
+                          checked={isFavorite} 
+                          onChange={(e) => setIsFavorite(e.target.checked)}
+                          className="sr-only peer"
+                        />
+                        <div className="w-11 h-6 bg-slate-200 peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#FF7675]"></div>
+                      </label>
                     </div>
                   </div>
-                  {errors.category && <span className="text-xs font-semibold text-red-500 mt-1">{errors.category}</span>}
-                </div>
-
-                {/* C. Favorite Toggle Switch */}
-                <div className="flex items-center justify-between p-4 bg-slate-50 border border-slate-200/60 rounded-2xl mt-2">
-                  <div className="flex flex-col">
-                    <span className="text-xs font-black text-slate-700 uppercase tracking-wider">Món ăn yêu thích</span>
-                    <span className="text-[10px] text-slate-400 font-medium">Đánh dấu món ăn này vào danh sách yêu thích</span>
-                  </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input 
-                      type="checkbox" 
-                      checked={isFavorite} 
-                      onChange={(e) => setIsFavorite(e.target.checked)}
-                      className="sr-only peer"
-                    />
-                    <div className="w-11 h-6 bg-slate-200 peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#FF7675]"></div>
-                  </label>
                 </div>
               </div>
 

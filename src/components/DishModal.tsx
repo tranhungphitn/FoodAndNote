@@ -364,49 +364,51 @@ export default function DishModal({ isOpen, onClose, dish, mode, onSave, onSwitc
                   {errors.name && <span className="text-xs font-semibold text-red-500 mt-1">{errors.name}</span>}
                 </div>
 
-                {/* 2. Category Select Selection Grid */}
-                <div className="flex flex-col gap-1.5">
-                  <span className="text-xs font-bold text-slate-700 tracking-wide uppercase">
-                    Phân Loại Món Ăn <span className="text-red-500">*</span>
-                  </span>
-                  <div className="grid grid-cols-3 gap-2">
-                    {DISH_CATEGORIES.filter(cat => cat !== 'Tất cả').map((cat) => (
-                      <button
-                        key={cat}
-                        type="button"
-                        onClick={() => {
-                          setCategory(cat);
-                          if (errors.category) setErrors(prev => ({ ...prev, category: '' }));
-                        }}
-                        className={`py-2 px-1 text-xs font-bold rounded-xl border text-center transition-all ${
-                          category === cat
-                            ? 'bg-[#FF7675] border-[#FF7675] text-white shadow-xs'
-                            : 'bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-600'
-                        }`}
-                        id={`btn-select-category-${cat}`}
-                      >
-                        {cat}
-                      </button>
-                    ))}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
+                  {/* 2. Category Select Selection Grid */}
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-xs font-bold text-slate-700 tracking-wide uppercase">
+                      Phân Loại Món Ăn <span className="text-red-500">*</span>
+                    </span>
+                    <div className="grid grid-cols-3 gap-2">
+                      {DISH_CATEGORIES.filter(cat => cat !== 'Tất cả').map((cat) => (
+                        <button
+                          key={cat}
+                          type="button"
+                          onClick={() => {
+                            setCategory(cat);
+                            if (errors.category) setErrors(prev => ({ ...prev, category: '' }));
+                          }}
+                          className={`py-2 px-1 text-xs font-bold rounded-xl border text-center transition-all ${
+                            category === cat
+                              ? 'bg-[#FF7675] border-[#FF7675] text-white shadow-xs'
+                              : 'bg-slate-50 hover:bg-slate-100 border-slate-200 text-slate-600'
+                          }`}
+                          id={`btn-select-category-${cat}`}
+                        >
+                          {cat}
+                        </button>
+                      ))}
+                    </div>
+                    {errors.category && <span className="text-xs font-semibold text-red-500 mt-1">{errors.category}</span>}
                   </div>
-                  {errors.category && <span className="text-xs font-semibold text-red-500 mt-1">{errors.category}</span>}
-                </div>
 
-                {/* 2b. Favorite Toggle Switch */}
-                <div className="flex items-center justify-between p-3.5 bg-slate-50 border border-slate-200/60 rounded-xl mt-1">
-                  <div className="flex flex-col">
-                    <span className="text-xs font-bold text-slate-700 uppercase tracking-wide">Món ăn yêu thích</span>
-                    <span className="text-[10px] text-slate-400">Đánh dấu vào danh sách yêu thích</span>
+                  {/* 2b. Favorite Toggle Switch */}
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-xs font-bold text-slate-700 tracking-wide uppercase">Yêu thích</span>
+                    <div className="flex items-center justify-between p-3 bg-slate-50 border border-slate-200/60 rounded-xl h-[42px]">
+                      <span className="text-xs font-bold text-slate-700">Món ăn yêu thích</span>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input 
+                          type="checkbox" 
+                          checked={isFavorite} 
+                          onChange={(e) => setIsFavorite(e.target.checked)}
+                          className="sr-only peer"
+                        />
+                        <div className="w-11 h-6 bg-slate-200 peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#FF7675]"></div>
+                      </label>
+                    </div>
                   </div>
-                  <label className="relative inline-flex items-center cursor-pointer">
-                    <input 
-                      type="checkbox" 
-                      checked={isFavorite} 
-                      onChange={(e) => setIsFavorite(e.target.checked)}
-                      className="sr-only peer"
-                    />
-                    <div className="w-11 h-6 bg-slate-200 peer-focus:outline-hidden rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#FF7675]"></div>
-                  </label>
                 </div>
 
                 {/* 3. Image Selector Gallery */}
