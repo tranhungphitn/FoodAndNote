@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { Bold, Italic, List, ListOrdered, Type, Eye, Edit } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Bold, Italic, List, ListOrdered, Type } from 'lucide-react';
 
 interface ModernTextEditorProps {
   id: string;
@@ -20,8 +20,189 @@ export default function ModernTextEditor({
   heightClass = 'h-48',
   error = false,
 }: ModernTextEditorProps) {
-  const [activeTab, setActiveTab] = useState<'write' | 'preview'>('write');
-  const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const editorRef = useRef<HTMLDivElement>(null);
+  const lastPropsValueRef = useRef(value);
+
+  // Visual state indicators
+  const [isBold, setIsBold] = useState(false);
+  const [isItalic, setIsItalic] = useState(false);
+
+  // Check if Bold / Italic is active at the cursor position
+  const checkCommandStates = () => {
+    try {
+      setIsBold(document.queryCommandState('bold'));
+      setIsItalic(document.queryCommandState('italic'));
+    } catch (err) {
+      // Ignore errors when document isn't fully ready
+    }
+  };
+
+  // Convert Markdown stored in database to HTML for visual editing
+  const markdownToHtml = (md: string): string => {
+    if (!md) return '';
+    
+    // Split by newlines and format each block
+    const lines = md.split('\n');
+    let html = '';
+    let inList = false;
+    let listType: 'ul' | 'ol' | null = null;
+    
+    const formatInline = (text: string) => {
+      let safe = text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+      // Bold: **text** -> <strong>text</strong>
+      safe = safe.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      // Italic: *text* -> <em>text</em>
+      safe = safe.replace(/\*(.*?)\*/g, '<em>$1</em>');
+      return safe;
+    };
+    
+    lines.forEach((line) => {
+      const trimmed = line.trim();
+      
+      if (trimmed.startsWith('- ')) {
+        // Bullet list
+        if (!inList || listType !== 'ul') {
+          if (inList) html += listType === 'ul' ? '</ul>' : '</ol>';
+          html += '<ul>';
+          inList = true;
+          listType = 'ul';
+        }
+        html += `<li>${formatInline(trimmed.substring(2))}</li>`;
+      } else {
+        // Check for numbered list (e.g., "1. step")
+        const stepMatch = trimmed.match(/^(\d+)\.\s*(.*)/);
+        if (stepMatch) {
+          if (!inList || listType !== 'ol') {
+            if (inList) html += listType === 'ul' ? '</ul>' : '</ol>';
+            html += '<ol>';
+            inList = true;
+            listType = 'ol';
+          }
+          html += `<li>${formatInline(stepMatch[2])}</li>`;
+        } else {
+          // Standard text line
+          if (inList) {
+            html += listType === 'ul' ? '</ul>' : '</ol>';
+            inList = false;
+            listType = null;
+          }
+          if (trimmed === '') {
+            html += '<br>';
+          } else {
+            html += `<div>${formatInline(line)}</div>`;
+          }
+        }
+      }
+    });
+    
+    if (inList) {
+      html += listType === 'ul' ? '</ul>' : '</ol>';
+    }
+    
+    return html;
+  };
+
+  // Convert visual HTML nodes back to Markdown format for database storage
+  const domToMarkdown = (htmlContent: string): string => {
+    const temp = document.createElement('div');
+    temp.innerHTML = htmlContent;
+    
+    let markdown = '';
+    
+    const traverse = (node: Node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        markdown += node.nodeValue;
+        return;
+      }
+      
+      if (node.nodeType === Node.ELEMENT_NODE) {
+        const el = node as HTMLElement;
+        const tag = el.tagName.toLowerCase();
+        
+        if (tag === 'strong' || tag === 'b') {
+          markdown += '**';
+          el.childNodes.forEach(traverse);
+          markdown += '**';
+        } else if (tag === 'em' || tag === 'i') {
+          markdown += '*';
+          el.childNodes.forEach(traverse);
+          markdown += '*';
+        } else if (tag === 'ul') {
+          el.childNodes.forEach(child => {
+            if (child.nodeName.toLowerCase() === 'li') {
+              markdown += '- ';
+              traverse(child);
+              markdown += '\n';
+            } else {
+              traverse(child);
+            }
+          });
+        } else if (tag === 'ol') {
+          let index = 1;
+          el.childNodes.forEach(child => {
+            if (child.nodeName.toLowerCase() === 'li') {
+              markdown += `${index++}. `;
+              traverse(child);
+              markdown += '\n';
+            } else {
+              traverse(child);
+            }
+          });
+        } else if (tag === 'li') {
+          markdown += '- ';
+          el.childNodes.forEach(traverse);
+          markdown += '\n';
+        } else if (tag === 'br') {
+          markdown += '\n';
+        } else if (tag === 'p' || tag === 'div') {
+          if (markdown && !markdown.endsWith('\n')) {
+            markdown += '\n';
+          }
+          el.childNodes.forEach(traverse);
+          if (!markdown.endsWith('\n')) {
+            markdown += '\n';
+          }
+        } else {
+          el.childNodes.forEach(traverse);
+        }
+      }
+    };
+    
+    temp.childNodes.forEach(traverse);
+    
+    // Clean up excessive spacing while preserving newlines
+    return markdown
+      .replace(/\n\s*\n+/g, '\n\n')
+      .trim();
+  };
+
+  // Setup initial HTML value once on mount
+  useEffect(() => {
+    if (editorRef.current) {
+      editorRef.current.innerHTML = markdownToHtml(value);
+    }
+  }, []);
+
+  // Update editor innerHTML when external state overrides value (e.g. Form cancel/reset)
+  useEffect(() => {
+    if (editorRef.current && value !== lastPropsValueRef.current) {
+      editorRef.current.innerHTML = markdownToHtml(value);
+      lastPropsValueRef.current = value;
+    }
+  }, [value]);
+
+  const handleInput = () => {
+    if (editorRef.current) {
+      const html = editorRef.current.innerHTML;
+      const markdown = domToMarkdown(html);
+      lastPropsValueRef.current = markdown;
+      onChange(markdown);
+      checkCommandStates();
+    }
+  };
 
   const capitalizeFirstLetterOfLines = (str: string) => {
     if (!str) return '';
@@ -38,292 +219,149 @@ export default function ModernTextEditor({
       .join('\n');
   };
 
-  const handleFormatting = (type: 'bold' | 'italic' | 'bullet' | 'number' | 'capitalize') => {
-    const el = textareaRef.current;
-    if (!el) return;
-
-    const start = el.selectionStart;
-    const end = el.selectionEnd;
-    const text = el.value;
-    const selected = text.substring(start, end);
-
-    if (type === 'bold') {
-      const prefix = '**';
-      const suffix = '**';
-      const placeholderText = selected || 'in đậm';
-      const replacement = prefix + placeholderText + suffix;
-      const newVal = text.substring(0, start) + replacement + text.substring(end);
-      onChange(newVal);
-      setTimeout(() => {
-        el.focus();
-        el.setSelectionRange(start + prefix.length, start + prefix.length + placeholderText.length);
-      }, 10);
-    } else if (type === 'italic') {
-      const prefix = '*';
-      const suffix = '*';
-      const placeholderText = selected || 'in nghiêng';
-      const replacement = prefix + placeholderText + suffix;
-      const newVal = text.substring(0, start) + replacement + text.substring(end);
-      onChange(newVal);
-      setTimeout(() => {
-        el.focus();
-        el.setSelectionRange(start + prefix.length, start + prefix.length + placeholderText.length);
-      }, 10);
-    } else if (type === 'bullet') {
-      if (selected.includes('\n')) {
-        const formatted = selected
-          .split('\n')
-          .map(line => {
-            const trimmed = line.trim();
-            if (trimmed.startsWith('-')) return line;
-            return `- ${line}`;
-          })
-          .join('\n');
-        const newVal = text.substring(0, start) + formatted + text.substring(end);
-        onChange(newVal);
-        setTimeout(() => {
-          el.focus();
-          el.setSelectionRange(start, start + formatted.length);
-        }, 10);
-      } else {
-        const prefix = '- ';
-        const placeholderText = selected || 'nguyên liệu';
-        const replacement = prefix + placeholderText;
-        const newVal = text.substring(0, start) + replacement + text.substring(end);
-        onChange(newVal);
-        setTimeout(() => {
-          el.focus();
-          el.setSelectionRange(start + prefix.length, start + prefix.length + placeholderText.length);
-        }, 10);
-      }
-    } else if (type === 'number') {
-      if (selected.includes('\n')) {
-        let step = 1;
-        const formatted = selected
-          .split('\n')
-          .map(line => {
-            const trimmed = line.trim();
-            if (trimmed.match(/^\d+\./)) return line;
-            return `${step++}. ${line}`;
-          })
-          .join('\n');
-        const newVal = text.substring(0, start) + formatted + text.substring(end);
-        onChange(newVal);
-        setTimeout(() => {
-          el.focus();
-          el.setSelectionRange(start, start + formatted.length);
-        }, 10);
-      } else {
-        const prefix = '1. ';
-        const placeholderText = selected || 'bước thực hiện';
-        const replacement = prefix + placeholderText;
-        const newVal = text.substring(0, start) + replacement + text.substring(end);
-        onChange(newVal);
-        setTimeout(() => {
-          el.focus();
-          el.setSelectionRange(start + prefix.length, start + prefix.length + placeholderText.length);
-        }, 10);
-      }
-    } else if (type === 'capitalize') {
-      const newVal = capitalizeFirstLetterOfLines(text);
-      onChange(newVal);
-      setTimeout(() => {
-        el.focus();
-        el.setSelectionRange(start, end);
-      }, 10);
-    }
+  const triggerCommand = (command: string) => {
+    document.execCommand(command, false);
+    handleInput();
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.ctrlKey || e.metaKey) {
-      if (e.key === 'b' || e.key === 'B') {
-        e.preventDefault();
-        handleFormatting('bold');
-      } else if (e.key === 'i' || e.key === 'I') {
-        e.preventDefault();
-        handleFormatting('italic');
-      }
+  const handleCapitalize = () => {
+    if (editorRef.current) {
+      const html = editorRef.current.innerHTML;
+      const md = domToMarkdown(html);
+      const capitalized = capitalizeFirstLetterOfLines(md);
+      editorRef.current.innerHTML = markdownToHtml(capitalized);
+      handleInput();
     }
-  };
-
-  const renderPreview = (text: string) => {
-    if (!text) {
-      return (
-        <div className="flex items-center justify-center h-full min-h-[120px] text-slate-400 italic text-xs">
-          Chưa soạn nội dung...
-        </div>
-      );
-    }
-
-    const lines = text.split('\n');
-    return (
-      <div className="space-y-2.5 text-slate-700 text-sm leading-relaxed p-4 bg-slate-50 border border-slate-100 rounded-b-2xl h-full overflow-y-auto max-h-[400px]">
-        {lines.map((line, idx) => {
-          const trimmed = line.trim();
-
-          const formatLine = (t: string) => {
-            let safe = t
-              .replace(/&/g, '&amp;')
-              .replace(/</g, '&lt;')
-              .replace(/>/g, '&gt;');
-            safe = safe.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            safe = safe.replace(/\*(.*?)\*/g, '<em>$1</em>');
-            return safe;
-          };
-
-          if (trimmed.startsWith('-')) {
-            const content = trimmed.substring(1).trim();
-            return (
-              <div key={idx} className="flex items-start gap-2 pl-2">
-                <span className="text-[#FF7675] font-extrabold select-none">•</span>
-                <span className="font-medium text-slate-700" dangerouslySetInnerHTML={{ __html: formatLine(content) }} />
-              </div>
-            );
-          }
-
-          const stepMatch = trimmed.match(/^(\d+)\.\s*(.*)/);
-          if (stepMatch) {
-            const stepNum = stepMatch[1];
-            const content = stepMatch[2];
-            return (
-              <div key={idx} className="flex items-start gap-3 pl-1">
-                <span className="flex items-center justify-center w-5 h-5 bg-[#FFEAEA] text-[#FF7675] font-extrabold text-[11px] rounded-full shrink-0 mt-0.5 select-none">
-                  {stepNum}
-                </span>
-                <span className="font-medium text-slate-700" dangerouslySetInnerHTML={{ __html: formatLine(content) }} />
-              </div>
-            );
-          }
-
-          return (
-            <p
-              key={idx}
-              className={`font-medium text-slate-700 ${trimmed === '' ? 'h-3' : ''}`}
-              dangerouslySetInnerHTML={{ __html: formatLine(line) }}
-            />
-          );
-        })}
-      </div>
-    );
   };
 
   return (
-    <div className={`flex flex-col border rounded-2xl overflow-hidden bg-slate-50/50 shadow-xs focus-within:ring-4 focus-within:ring-[#FF7675]/10 focus-within:border-[#FF7675] transition-all ${className} ${
+    <div className={`flex flex-col border rounded-2xl overflow-hidden bg-white shadow-xs focus-within:ring-4 focus-within:ring-[#FF7675]/10 focus-within:border-[#FF7675] transition-all ${className} ${
       error ? 'border-red-400' : 'border-slate-200'
     }`}>
-      {/* Editor Header / Toolbar */}
+      {/* Editor CSS Rule Injector to style lists bypass Tailwind resets */}
+      <style dangerouslySetInnerHTML={{ __html: `
+        .wysiwyg-editor ul {
+          list-style-type: disc !important;
+          padding-left: 1.5rem !important;
+          margin-top: 0.5rem !important;
+          margin-bottom: 0.5rem !important;
+        }
+        .wysiwyg-editor ol {
+          list-style-type: decimal !important;
+          padding-left: 1.5rem !important;
+          margin-top: 0.5rem !important;
+          margin-bottom: 0.5rem !important;
+        }
+        .wysiwyg-editor li {
+          margin-bottom: 0.25rem !important;
+        }
+        .wysiwyg-editor[contenteditable]:empty:before {
+          content: attr(data-placeholder);
+          color: #94a3b8;
+          cursor: text;
+        }
+      `}} />
+
+      {/* Editor Toolbar */}
       <div className="flex flex-wrap items-center justify-between gap-3 px-3 py-2 bg-slate-100/80 border-b border-slate-200 shrink-0">
-        {/* Tabs Group */}
-        <div className="flex items-center gap-1 bg-slate-200/50 p-0.5 rounded-lg border border-slate-200/20">
+        <span className="text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-wider select-none px-1">
+          Định dạng nhanh
+        </span>
+        <div className="flex items-center gap-1">
+          {/* Bold Button */}
           <button
             type="button"
-            onClick={() => setActiveTab('write')}
-            className={`px-3 py-1 rounded-md text-[11px] sm:text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
-              activeTab === 'write'
-                ? 'bg-white text-slate-800 shadow-xs'
-                : 'text-slate-500 hover:text-slate-800'
+            onMouseDown={(e) => {
+              e.preventDefault();
+              triggerCommand('bold');
+            }}
+            className={`p-1.5 rounded-md transition-all cursor-pointer flex items-center justify-center ${
+              isBold 
+                ? 'bg-[#FF7675] text-white shadow-xs' 
+                : 'hover:bg-slate-200/85 text-slate-600 hover:text-slate-900'
             }`}
+            title="Chữ đậm (Ctrl+B)"
           >
-            <Edit className="w-3 h-3" />
-            <span>Soạn thảo</span>
+            <Bold className="w-3.5 h-3.5" />
           </button>
+
+          {/* Italic Button */}
           <button
             type="button"
-            onClick={() => setActiveTab('preview')}
-            className={`px-3 py-1 rounded-md text-[11px] sm:text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
-              activeTab === 'preview'
-                ? 'bg-white text-slate-800 shadow-xs'
-                : 'text-slate-500 hover:text-slate-800'
+            onMouseDown={(e) => {
+              e.preventDefault();
+              triggerCommand('italic');
+            }}
+            className={`p-1.5 rounded-md transition-all cursor-pointer flex items-center justify-center ${
+              isItalic 
+                ? 'bg-[#FF7675] text-white shadow-xs' 
+                : 'hover:bg-slate-200/85 text-slate-600 hover:text-slate-900'
             }`}
+            title="Chữ nghiêng (Ctrl+I)"
           >
-            <Eye className="w-3 h-3" />
-            <span>Xem trước</span>
+            <Italic className="w-3.5 h-3.5" />
+          </button>
+
+          <div className="w-[1px] h-4 bg-slate-300 mx-1" />
+
+          {/* Bullet List Button */}
+          <button
+            type="button"
+            onMouseDown={(e) => {
+              e.preventDefault();
+              triggerCommand('insertUnorderedList');
+            }}
+            className="p-1.5 hover:bg-slate-200/85 text-slate-600 hover:text-slate-900 rounded-md transition-all cursor-pointer flex items-center justify-center"
+            title="Danh sách dấu tròn"
+          >
+            <List className="w-3.5 h-3.5" />
+          </button>
+
+          {/* Number List Button */}
+          <button
+            type="button"
+            onMouseDown={(e) => {
+              e.preventDefault();
+              triggerCommand('insertOrderedList');
+            }}
+            className="p-1.5 hover:bg-slate-200/85 text-slate-600 hover:text-slate-900 rounded-md transition-all cursor-pointer flex items-center justify-center"
+            title="Danh sách số"
+          >
+            <ListOrdered className="w-3.5 h-3.5" />
+          </button>
+
+          <div className="w-[1px] h-4 bg-slate-300 mx-1" />
+
+          {/* Capitalize Button */}
+          <button
+            type="button"
+            onMouseDown={(e) => {
+              e.preventDefault();
+              handleCapitalize();
+            }}
+            className="p-1.5 hover:bg-slate-200/85 text-slate-600 hover:text-slate-900 rounded-md transition-all cursor-pointer flex items-center justify-center"
+            title="Tự động viết hoa đầu dòng"
+          >
+            <Type className="w-3.5 h-3.5" />
           </button>
         </div>
-
-        {/* Formatting Buttons (Only show when editing) */}
-        {activeTab === 'write' && (
-          <div className="flex items-center gap-1">
-            <button
-              type="button"
-              onMouseDown={(e) => {
-                e.preventDefault();
-                handleFormatting('bold');
-              }}
-              className="p-1.5 hover:bg-slate-200/80 text-slate-600 hover:text-slate-900 rounded-md transition-all cursor-pointer flex items-center justify-center"
-              title="Chữ đậm (Ctrl+B)"
-            >
-              <Bold className="w-3.5 h-3.5" />
-            </button>
-            <button
-              type="button"
-              onMouseDown={(e) => {
-                e.preventDefault();
-                handleFormatting('italic');
-              }}
-              className="p-1.5 hover:bg-slate-200/80 text-slate-600 hover:text-slate-900 rounded-md transition-all cursor-pointer flex items-center justify-center"
-              title="Chữ nghiêng (Ctrl+I)"
-            >
-              <Italic className="w-3.5 h-3.5" />
-            </button>
-            <div className="w-[1px] h-4 bg-slate-300 mx-1" />
-            <button
-              type="button"
-              onMouseDown={(e) => {
-                e.preventDefault();
-                handleFormatting('bullet');
-              }}
-              className="p-1.5 hover:bg-slate-200/80 text-slate-600 hover:text-slate-900 rounded-md transition-all cursor-pointer flex items-center justify-center"
-              title="Danh sách dấu tròn (-)"
-            >
-              <List className="w-3.5 h-3.5" />
-            </button>
-            <button
-              type="button"
-              onMouseDown={(e) => {
-                e.preventDefault();
-                handleFormatting('number');
-              }}
-              className="p-1.5 hover:bg-slate-200/80 text-slate-600 hover:text-slate-900 rounded-md transition-all cursor-pointer flex items-center justify-center"
-              title="Danh sách số (1.)"
-            >
-              <ListOrdered className="w-3.5 h-3.5" />
-            </button>
-            <div className="w-[1px] h-4 bg-slate-300 mx-1" />
-            <button
-              type="button"
-              onMouseDown={(e) => {
-                e.preventDefault();
-                handleFormatting('capitalize');
-              }}
-              className="p-1.5 hover:bg-slate-200/80 text-slate-600 hover:text-slate-900 rounded-md transition-all cursor-pointer flex items-center justify-center"
-              title="Tự động viết hoa đầu dòng"
-            >
-              <Type className="w-3.5 h-3.5" />
-            </button>
-          </div>
-        )}
       </div>
 
-      {/* Editor Body */}
+      {/* Visual Editor Work Area (contentEditable) */}
       <div className="relative flex-1 min-h-0 bg-white">
-        {activeTab === 'write' ? (
-          <textarea
-            ref={textareaRef}
-            id={id}
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder={placeholder}
-            className={`w-full text-sm text-slate-700 bg-transparent p-4 outline-hidden border-0 focus:ring-0 resize-y transition-all ${heightClass} ${
-              error ? 'bg-red-50/5' : ''
-            }`}
-          />
-        ) : (
-          <div className={`w-full overflow-y-auto ${heightClass}`}>
-            {renderPreview(value)}
-          </div>
-        )}
+        <div
+          ref={editorRef}
+          id={id}
+          contentEditable
+          onInput={handleInput}
+          onKeyUp={checkCommandStates}
+          onMouseUp={checkCommandStates}
+          data-placeholder={placeholder}
+          className={`wysiwyg-editor w-full text-sm text-slate-700 bg-transparent p-4 outline-hidden overflow-y-auto transition-all ${heightClass} ${
+            error ? 'bg-red-50/5' : ''
+          }`}
+          style={{ minHeight: '140px' }}
+        />
       </div>
     </div>
   );
