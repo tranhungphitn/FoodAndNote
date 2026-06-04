@@ -50,13 +50,13 @@ export default function DishCard({ dish, onViewDetails, onEdit, onDelete, onTogg
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
       transition={{ duration: 0.25 }}
-      className="group glass-card glass-shimmer rounded-2xl sm:rounded-3xl overflow-hidden flex flex-col justify-between h-[270px] sm:h-[330px]"
+      className="group glass-card glass-shimmer rounded-2xl sm:rounded-3xl overflow-hidden flex flex-col justify-between h-[240px] sm:h-[330px]"
       id={`dish-card-${dish.id}`}
     >
       {/* Visual Header / Cover Photo */}
       <div 
         onClick={() => onViewDetails(dish)}
-        className="relative h-28 sm:h-44 w-full overflow-hidden bg-slate-100 shrink-0 cursor-pointer"
+        className="relative h-24 sm:h-44 w-full overflow-hidden bg-slate-100 shrink-0 cursor-pointer"
       >
         <img
           src={itemImage}
@@ -104,7 +104,7 @@ export default function DishCard({ dish, onViewDetails, onEdit, onDelete, onTogg
       </div>
 
       {/* Main Body Column */}
-      <div className="p-3.5 sm:p-5 flex-1 flex flex-col justify-between min-h-0">
+      <div className="p-2.5 sm:p-5 flex-1 flex flex-col justify-between min-h-0">
         <div>
           {/* Dish name with line clamps to support multi-line title heights */}
           <h3 

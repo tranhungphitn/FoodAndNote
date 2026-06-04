@@ -587,7 +587,7 @@ export default function App() {
 
 
       {/* 2. Main Content Container block */}
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 py-6">
+      <main className="flex-1 max-w-6xl w-full mx-auto px-3 sm:px-4 py-3 sm:py-6">
         
         {syncError && (
           <div className="mb-6 p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-2xl flex items-start gap-3 shadow-xs">
@@ -680,12 +680,12 @@ service cloud.firestore {
             TAB 1: RECIPES & DISHES CONTROLS PANEL
             ======================================= */}
         {activeTab === 'dishes' && (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             
             {/* Search, Filter Bar */}
-            <div className="flex flex-col gap-4 glass p-4 sm:p-5 rounded-3xl">
+            <div className="flex flex-col gap-3 sm:gap-4 glass p-3 sm:p-5 rounded-2xl sm:rounded-3xl">
               <div className="relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5 pointer-events-none" />
+                <Search className="absolute left-3.5 sm:left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4 sm:w-5 sm:h-5 pointer-events-none" />
                 <input
                   type="text"
                   placeholder="Tìm kiếm món ngon theo tên, nguyên liệu, phân loại..."
@@ -695,7 +695,7 @@ service cloud.firestore {
                     setShowSuggestions(true);
                   }}
                   onFocus={() => setShowSuggestions(true)}
-                  className="glass-input w-full text-sm rounded-2xl pl-12 pr-10 py-3.5 font-medium"
+                  className="glass-input w-full text-xs sm:text-sm rounded-xl sm:rounded-2xl pl-10 sm:pl-12 pr-10 py-2.5 sm:py-3.5 font-medium"
                   id="dish-search-input"
                 />
                 {dishSearch && (
@@ -861,18 +861,18 @@ service cloud.firestore {
             TAB 2: HANDY NOTES & WISHLISTS PANEL
             ======================================= */}
         {activeTab === 'notes' && (
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             
             {/* Notes Search input layout */}
-            <div className="glass p-4 rounded-3xl">
+            <div className="glass p-3 sm:p-4 rounded-2xl sm:rounded-3xl">
               <div className="relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5 pointer-events-none" />
+                <Search className="absolute left-3.5 sm:left-4 top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4 sm:w-5 sm:h-5 pointer-events-none" />
                 <input
                   type="text"
                   placeholder="Tìm kiếm nội dung ghi chú nhanh..."
                   value={noteSearch}
                   onChange={(e) => setNoteSearch(e.target.value)}
-                  className="glass-input w-full text-sm rounded-2xl pl-12 pr-10 py-3.5 font-medium"
+                  className="glass-input w-full text-xs sm:text-sm rounded-xl sm:rounded-2xl pl-10 sm:pl-12 pr-10 py-2.5 sm:py-3.5 font-medium"
                   id="note-search-input"
                 />
                 {noteSearch && (

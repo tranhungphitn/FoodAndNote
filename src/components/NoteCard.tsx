@@ -36,7 +36,7 @@ export default function NoteCard({ note, onEdit, onDelete, onTogglePin, readOnly
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.2 }}
-      className="glass-note relative flex flex-col justify-between rounded-3xl p-6 border border-slate-200"
+      className="glass-note relative flex flex-col justify-between rounded-[24px] sm:rounded-3xl p-4 sm:p-6 border border-slate-200"
       style={{ backgroundColor: note.color || '#ffffff' }}
       id={`note-card-${note.id}`}
     >
