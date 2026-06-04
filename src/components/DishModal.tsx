@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { X, Check, Camera, ListChecks, HelpCircle, Utensils, Award, BookOpen, Edit } from 'lucide-react';
+import { X, Check, Camera, ListChecks, HelpCircle, Utensils, Award, BookOpen, Edit, Heart } from 'lucide-react';
 import { Dish } from '../types';
 import { PRESET_RECIPE_IMAGES, DISH_CATEGORIES } from '../sampleData';
 import { motion, AnimatePresence } from 'motion/react';
