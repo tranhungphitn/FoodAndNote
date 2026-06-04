@@ -36,14 +36,14 @@ export default function NoteCard({ note, onEdit, onDelete, onTogglePin, readOnly
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.2 }}
-      className="relative flex flex-col justify-between rounded-3xl p-6 shadow-xs border border-black/5 hover:shadow-md transition-shadow duration-300"
-      style={{ backgroundColor: note.color || '#F4F6F7' }}
+      className="glass-note relative flex flex-col justify-between rounded-3xl p-6"
+      style={{ background: 'rgba(255,255,255,0.08)' }}
       id={`note-card-${note.id}`}
     >
       <div>
         {/* Top Header Row with Pinned Indicator */}
         <div className="flex items-start justify-between gap-3 mb-2">
-          <h3 className="font-bold text-gray-800 text-base leading-tight break-words">
+          <h3 className="font-bold text-glass-primary text-base leading-tight break-words">
             {note.title || 'Ghi chú không tiêu đề'}
           </h3>
           <button
@@ -65,14 +65,14 @@ export default function NoteCard({ note, onEdit, onDelete, onTogglePin, readOnly
         </div>
 
         {/* Note Body Text */}
-        <div className="text-gray-700 text-sm whitespace-pre-wrap break-words leading-relaxed mb-6 line-clamp-6">
+        <div className="text-glass-secondary text-sm whitespace-pre-wrap break-words leading-relaxed mb-6 line-clamp-6">
           {note.content || <em className="text-gray-400">Không có nội dung</em>}
         </div>
       </div>
 
       {/* Footer Controls Row */}
-      <div className="flex items-center justify-between border-t border-black/5 pt-3">
-        <span className="flex items-center gap-1 text-[11px] font-bold text-gray-500 font-mono">
+      <div className="flex items-center justify-between border-t border-white/15 pt-3">
+        <span className="flex items-center gap-1 text-[11px] font-bold text-white/45 font-mono">
           <Calendar className="w-3.5 h-3.5 text-gray-400" />
           {formatDate(note.updatedAt)}
         </span>

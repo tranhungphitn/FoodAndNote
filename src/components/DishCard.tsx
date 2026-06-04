@@ -50,7 +50,7 @@ export default function DishCard({ dish, onViewDetails, onEdit, onDelete, onTogg
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
       transition={{ duration: 0.25 }}
-      className="group bg-white rounded-2xl sm:rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl hover:shadow-gray-200/50 transition-all duration-300 overflow-hidden flex flex-col justify-between h-[270px] sm:h-[330px]"
+      className="group glass-card glass-shimmer rounded-2xl sm:rounded-3xl overflow-hidden flex flex-col justify-between h-[270px] sm:h-[330px]"
       id={`dish-card-${dish.id}`}
     >
       {/* Visual Header / Cover Photo */}
@@ -109,24 +109,24 @@ export default function DishCard({ dish, onViewDetails, onEdit, onDelete, onTogg
           {/* Dish name with line clamps to support multi-line title heights */}
           <h3 
             onClick={() => onViewDetails(dish)}
-            className="font-extrabold text-slate-800 text-xs sm:text-base leading-tight tracking-tight mb-1 group-hover:text-[#FF7675] hover:underline transition-colors line-clamp-1 cursor-pointer"
+            className="font-extrabold text-glass-primary text-xs sm:text-base leading-tight tracking-tight mb-1 group-hover:text-[#FF7675] hover:underline transition-colors line-clamp-1 cursor-pointer"
           >
             {dish.name}
           </h3>
           {/* Dish summary (if present) */}
           {dish.summary ? (
-            <p className="text-[10px] sm:text-xs font-semibold text-slate-400 italic leading-relaxed break-words line-clamp-2">
+            <p className="text-[10px] sm:text-xs font-semibold text-glass-secondary italic leading-relaxed break-words line-clamp-2">
               {dish.summary}
             </p>
           ) : (
-            <p className="text-[10px] sm:text-xs italic text-slate-300 leading-relaxed font-medium">
+            <p className="text-[10px] sm:text-xs italic text-white/20 leading-relaxed font-medium">
               Chưa cập nhật tóm tắt.
             </p>
           )}
         </div>
 
         {/* Footer click actions */}
-        <div className="border-t border-slate-50 pt-2 sm:pt-3 flex items-center justify-between mt-auto">
+        <div className="border-t border-white/10 pt-2 sm:pt-3 flex items-center justify-between mt-auto">
           <div className="flex items-center gap-1 sm:gap-1.5">
             <button
               onClick={(e) => {
@@ -148,7 +148,7 @@ export default function DishCard({ dish, onViewDetails, onEdit, onDelete, onTogg
                 }`} 
               />
             </button>
-            <span className="text-[8px] sm:text-[10px] text-slate-400 font-mono whitespace-nowrap">
+            <span className="text-[8px] sm:text-[10px] text-white/35 font-mono whitespace-nowrap">
               {dish.createdAt ? new Date(dish.createdAt).toLocaleDateString('vi-VN') : new Date(dish.updatedAt).toLocaleDateString('vi-VN')}
             </span>
           </div>
