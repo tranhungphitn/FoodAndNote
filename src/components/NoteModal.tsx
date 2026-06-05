@@ -9,9 +9,20 @@ interface NoteModalProps {
   onClose: () => void;
   onSave: (title: string, content: string, color: string) => void;
   initialNote: Note | null;
+  mode?: 'view' | 'edit' | 'create';
+  onSwitchToEdit?: (note: Note) => void;
+  readOnly?: boolean;
 }
 
-export default function NoteModal({ isOpen, onClose, onSave, initialNote }: NoteModalProps) {
+export default function NoteModal({
+  isOpen,
+  onClose,
+  onSave,
+  initialNote,
+  mode = 'edit',
+  onSwitchToEdit,
+  readOnly = false
+}: NoteModalProps) {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [color, setColor] = useState('#FEF9E7'); // Default light yellow
@@ -68,7 +79,7 @@ export default function NoteModal({ isOpen, onClose, onSave, initialNote }: Note
           {/* Header */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-black/5 bg-white/40 backdrop-blur-md">
             <h2 className="text-lg font-bold text-gray-800">
-              {initialNote ? 'Chỉnh sửa Ghi Chú' : 'Thêm Ghi Chú Mới'}
+              {mode === 'view' ? 'Chi Tiết Ghi Chú' : initialNote ? 'Chỉnh sửa Ghi Chú' : 'Thêm Ghi Chú Mới'}
             </h2>
             <button
               onClick={onClose}
@@ -80,92 +91,135 @@ export default function NoteModal({ isOpen, onClose, onSave, initialNote }: Note
             </button>
           </div>
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="flex-1 flex flex-col overflow-hidden p-6 gap-4">
-            {error && (
-              <div className="text-sm font-medium text-red-600 bg-red-100/80 px-3 py-2 rounded-xl">
-                {error}
+          {mode === 'view' && initialNote ? (
+            <div className="flex-1 flex flex-col overflow-hidden p-6 gap-5">
+              {/* Note Details View */}
+              <div className="flex-1 flex flex-col min-h-0 overflow-y-auto pr-1">
+                {/* Title */}
+                <h3 className="text-xl font-extrabold text-gray-900 break-words mb-3">
+                  {initialNote.title || 'Ghi chú không tiêu đề'}
+                </h3>
+                
+                {/* Time updated info */}
+                <div className="text-[11px] font-bold text-gray-500 font-mono mb-4 border-b border-black/5 pb-2 flex items-center gap-1.5">
+                  <span>Cập nhật lúc: {new Date(initialNote.updatedAt).toLocaleString('vi-VN')}</span>
+                </div>
+
+                {/* Content */}
+                <div className="text-sm text-gray-800 leading-relaxed whitespace-pre-wrap break-words flex-1">
+                  {initialNote.content || <em className="text-slate-400">Không có nội dung</em>}
+                </div>
               </div>
-            )}
 
-            {/* Input Title */}
-            <div className="flex flex-col gap-1">
-              <label htmlFor="note-title-input" className="text-xs font-semibold text-gray-700 tracking-wider uppercase">
-                Tiêu đề
-              </label>
-              <input
-                id="note-title-input"
-                type="text"
-                placeholder="Ví dụ: Đi siêu thị lót lòng..."
-                value={title}
-                onChange={(e) => {
-                  setTitle(e.target.value);
-                  if (error) setError('');
-                }}
-                className="w-full text-base font-semibold text-gray-800 placeholder-gray-500 bg-white/70 backdrop-blur-xs border border-black/10 focus:border-[#4834D4] rounded-2xl px-4 py-3 outline-hidden focus:ring-2 focus:ring-[#4834D4]/10"
-                autoFocus
-              />
-            </div>
-
-            {/* Input Content */}
-            <div className="flex-1 flex flex-col gap-1 min-h-0">
-              <label htmlFor="note-content-input" className="text-xs font-semibold text-gray-700 tracking-wider uppercase">
-                Nội dung ghi chú
-              </label>
-              <textarea
-                id="note-content-input"
-                placeholder="Viết nội dung hay danh mục cần lưu giữ..."
-                value={content}
-                onChange={(e) => {
-                  setContent(e.target.value);
-                  if (error) setError('');
-                }}
-                className="w-full flex-1 min-h-[120px] text-sm text-gray-700 placeholder-gray-500 bg-white/70 backdrop-blur-xs border border-black/10 focus:border-[#4834D4] rounded-2xl p-4 outline-hidden focus:ring-2 focus:ring-[#4834D4]/10 resize-none overflow-y-auto"
-              />
-            </div>
-
-            {/* Color selection row */}
-            <div className="flex flex-col gap-2">
-              <span className="text-xs font-semibold text-gray-700 tracking-wider uppercase">
-                Màu sắc nền
-              </span>
-              <div className="flex items-center gap-2 overflow-x-auto pb-1 max-w-full scrollbar-none">
-                {PRESET_NOTE_COLORS.map((preset) => (
+              {/* Action Buttons Row */}
+              <div className="border-t border-black/5 pt-4 mt-2 flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="flex-1 py-3 text-sm font-semibold rounded-2xl border border-black/10 text-gray-700 hover:bg-black/5 transition-colors cursor-pointer text-center bg-white/40"
+                >
+                  Đóng
+                </button>
+                {!readOnly && onSwitchToEdit && (
                   <button
-                    key={preset.value}
                     type="button"
-                    onClick={() => setColor(preset.value)}
-                    className="w-8 h-8 rounded-full border border-black/10 hover:scale-110 active:scale-95 transition-transform shrink-0 flex items-center justify-center relative cursor-pointer"
-                    style={{ backgroundColor: preset.value }}
-                    title={preset.name}
-                    id={`btn-color-${preset.value.replace('#','')}`}
+                    onClick={() => onSwitchToEdit(initialNote)}
+                    className="flex-1 py-3 text-sm font-bold rounded-2xl bg-[#6366f1] text-white hover:bg-[#4f46e5] shadow-xs active:scale-98 transition-all cursor-pointer text-center"
+                    id="btn-edit-note-from-view"
                   >
-                    {color === preset.value && (
-                      <Check className="w-4 h-4 text-gray-800 font-bold" />
-                    )}
+                    Chỉnh sửa
                   </button>
-                ))}
+                )}
               </div>
             </div>
+          ) : (
+            /* Form */
+            <form onSubmit={handleSubmit} className="flex-1 flex flex-col overflow-hidden p-6 gap-4">
+              {error && (
+                <div className="text-sm font-medium text-red-600 bg-red-100/80 px-3 py-2 rounded-xl">
+                  {error}
+                </div>
+              )}
 
-            {/* Submit Bar */}
-            <div className="border-t border-black/5 pt-4 mt-2 flex items-center gap-3">
-              <button
-                type="button"
-                onClick={onClose}
-                className="flex-1 py-3 text-sm font-semibold rounded-2xl border border-black/10 text-gray-700 hover:bg-black/5 transition-colors cursor-pointer text-center"
-              >
-                Hủy bỏ
-              </button>
-              <button
-                type="submit"
-                className="flex-1 py-3 text-sm font-bold rounded-2xl bg-[#FF7675] text-white hover:bg-[#E17055] shadow-xs active:scale-98 transition-all cursor-pointer text-center"
-                id="btn-save-note"
-              >
-                Lưu lại
-              </button>
-            </div>
-          </form>
+              {/* Input Title */}
+              <div className="flex flex-col gap-1">
+                <label htmlFor="note-title-input" className="text-xs font-semibold text-gray-700 tracking-wider uppercase">
+                  Tiêu đề
+                </label>
+                <input
+                  id="note-title-input"
+                  type="text"
+                  placeholder="Ví dụ: Đi siêu thị lót lòng..."
+                  value={title}
+                  onChange={(e) => {
+                    setTitle(e.target.value);
+                    if (error) setError('');
+                  }}
+                  className="w-full text-base font-semibold text-gray-800 placeholder-gray-500 bg-white/70 backdrop-blur-xs border border-black/10 focus:border-[#4834D4] rounded-2xl px-4 py-3 outline-hidden focus:ring-2 focus:ring-[#4834D4]/10"
+                  autoFocus
+                />
+              </div>
+
+              {/* Input Content */}
+              <div className="flex-1 flex flex-col gap-1 min-h-0">
+                <label htmlFor="note-content-input" className="text-xs font-semibold text-gray-700 tracking-wider uppercase">
+                  Nội dung ghi chú
+                </label>
+                <textarea
+                  id="note-content-input"
+                  placeholder="Viết nội dung hay danh mục cần lưu giữ..."
+                  value={content}
+                  onChange={(e) => {
+                    setContent(e.target.value);
+                    if (error) setError('');
+                  }}
+                  className="w-full flex-1 min-h-[120px] text-sm text-gray-700 placeholder-gray-500 bg-white/70 backdrop-blur-xs border border-black/10 focus:border-[#4834D4] rounded-2xl p-4 outline-hidden focus:ring-2 focus:ring-[#4834D4]/10 resize-none overflow-y-auto"
+                />
+              </div>
+
+              {/* Color selection row */}
+              <div className="flex flex-col gap-2">
+                <span className="text-xs font-semibold text-gray-700 tracking-wider uppercase">
+                  Màu sắc nền
+                </span>
+                <div className="flex items-center gap-2 overflow-x-auto pb-1 max-w-full scrollbar-none">
+                  {PRESET_NOTE_COLORS.map((preset) => (
+                    <button
+                      key={preset.value}
+                      type="button"
+                      onClick={() => setColor(preset.value)}
+                      className="w-8 h-8 rounded-full border border-black/10 hover:scale-110 active:scale-95 transition-transform shrink-0 flex items-center justify-center relative cursor-pointer"
+                      style={{ backgroundColor: preset.value }}
+                      title={preset.name}
+                      id={`btn-color-${preset.value.replace('#','')}`}
+                    >
+                      {color === preset.value && (
+                        <Check className="w-4 h-4 text-gray-800 font-bold" />
+                      )}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Submit Bar */}
+              <div className="border-t border-black/5 pt-4 mt-2 flex items-center gap-3">
+                <button
+                  type="button"
+                  onClick={onClose}
+                  className="flex-1 py-3 text-sm font-semibold rounded-2xl border border-black/10 text-gray-700 hover:bg-black/5 transition-colors cursor-pointer text-center"
+                >
+                  Hủy bỏ
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-3 text-sm font-bold rounded-2xl bg-[#FF7675] text-white hover:bg-[#E17055] shadow-xs active:scale-98 transition-all cursor-pointer text-center"
+                  id="btn-save-note"
+                >
+                  Lưu lại
+                </button>
+              </div>
+            </form>
+          )}
         </motion.div>
       </div>
     </AnimatePresence>

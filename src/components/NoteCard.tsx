@@ -10,9 +10,10 @@ interface NoteCardProps {
   onDelete: (id: string) => void;
   onTogglePin: (id: string) => void;
   readOnly?: boolean;
+  onViewDetails?: (note: Note) => void;
 }
 
-export default function NoteCard({ note, onEdit, onDelete, onTogglePin, readOnly }: NoteCardProps) {
+export default function NoteCard({ note, onEdit, onDelete, onTogglePin, readOnly, onViewDetails }: NoteCardProps) {
   // Format dates cleanly for simple localized display
   const formatDate = (isoString: string) => {
     try {
@@ -36,7 +37,10 @@ export default function NoteCard({ note, onEdit, onDelete, onTogglePin, readOnly
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.2 }}
-      className="glass-note relative flex flex-col justify-between rounded-[24px] sm:rounded-3xl p-4 sm:p-6 border border-slate-200"
+      onClick={() => onViewDetails?.(note)}
+      className={`glass-note relative flex flex-col justify-between rounded-[24px] sm:rounded-3xl p-4 sm:p-6 border border-slate-200 ${
+        onViewDetails ? 'cursor-pointer' : ''
+      }`}
       style={{ backgroundColor: note.color || '#ffffff' }}
       id={`note-card-${note.id}`}
     >
@@ -81,7 +85,10 @@ export default function NoteCard({ note, onEdit, onDelete, onTogglePin, readOnly
         {!readOnly && (
           <div className="flex items-center gap-1">
             <button
-              onClick={() => onEdit(note)}
+              onClick={(e) => {
+                e.stopPropagation();
+                onEdit(note);
+              }}
               type="button"
               className="p-2 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all duration-150"
               title="Chỉnh sửa"
@@ -90,7 +97,8 @@ export default function NoteCard({ note, onEdit, onDelete, onTogglePin, readOnly
               <Edit3 className="w-4 h-4" />
             </button>
             <button
-              onClick={() => {
+              onClick={(e) => {
+                e.stopPropagation();
                 onDelete(note.id);
               }}
               type="button"

@@ -191,6 +191,7 @@ export default function App() {
   // Modals/Pages Controller State
   const [isNoteModalOpen, setIsNoteModalOpen] = useState(false);
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
+  const [noteModalMode, setNoteModalMode] = useState<'view' | 'edit' | 'create'>('view');
 
   const [isDishModalOpen, setIsDishModalOpen] = useState(false);
   const [selectedDish, setSelectedDish] = useState<Dish | null>(null);
@@ -406,12 +407,24 @@ export default function App() {
 
   const handleOpenCreateNote = () => {
     setSelectedNote(null);
+    setNoteModalMode('create');
     setIsNoteModalOpen(true);
   };
 
   const handleOpenEditNote = (note: Note) => {
     setSelectedNote(note);
+    setNoteModalMode('edit');
     setIsNoteModalOpen(true);
+  };
+
+  const handleViewNoteDetails = (note: Note) => {
+    setSelectedNote(note);
+    setNoteModalMode('view');
+    setIsNoteModalOpen(true);
+  };
+
+  const handleSwitchToEditNote = (note: Note) => {
+    setNoteModalMode('edit');
   };
 
   const handleTogglePinNote = async (id: string) => {
@@ -994,6 +1007,7 @@ service cloud.firestore {
                             onDelete={requestDeleteNote}
                             onTogglePin={handleTogglePinNote}
                             readOnly={userRole !== 'admin'}
+                            onViewDetails={handleViewNoteDetails}
                           />
                         ))}
                       </div>
@@ -1018,6 +1032,7 @@ service cloud.firestore {
                             onDelete={requestDeleteNote}
                             onTogglePin={handleTogglePinNote}
                             readOnly={userRole !== 'admin'}
+                            onViewDetails={handleViewNoteDetails}
                           />
                         ))}
                       </div>
@@ -1121,6 +1136,9 @@ service cloud.firestore {
         onClose={() => { setIsNoteModalOpen(false); setSelectedNote(null); }}
         onSave={handleSaveNote}
         initialNote={selectedNote}
+        mode={noteModalMode}
+        onSwitchToEdit={handleSwitchToEditNote}
+        readOnly={userRole !== 'admin'}
       />
 
       {/* B. Dish details inspection, adding, and editing wizard */}
