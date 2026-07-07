@@ -485,7 +485,7 @@ export default function App() {
     : [];
 
   // Pagination config
-  const ITEMS_PER_PAGE = 20;
+  const ITEMS_PER_PAGE = 24;
   const totalDishPages = Math.ceil(filteredDishes.length / ITEMS_PER_PAGE);
   const paginatedDishes = filteredDishes.slice(
     (currentDishPage - 1) * ITEMS_PER_PAGE,
@@ -868,7 +868,7 @@ service cloud.firestore {
             <AnimatePresence mode="popLayout">
               {filteredDishes.length > 0 ? (
                 <div className="space-y-6">
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-6">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-6">
                     {paginatedDishes.map((dish) => (
                       <DishCard
                         key={dish.id}
