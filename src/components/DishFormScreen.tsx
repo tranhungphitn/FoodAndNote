@@ -134,7 +134,7 @@ export default function DishFormScreen({ dish, mode, onSave, onCancel }: DishFor
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: -50 }}
       transition={{ duration: 0.3, ease: 'easeInOut' }}
-      className="w-full max-w-6xl mx-auto px-4 py-6"
+      className="w-full max-w-[85%] mx-auto px-4 py-6"
     >
       {/* 1. Navigation Header Row */}
       <div className="flex items-center gap-4 mb-8">
@@ -158,7 +158,7 @@ export default function DishFormScreen({ dish, mode, onSave, onCancel }: DishFor
       </div>
 
       {/* 2. Responsive Work Area Split Column/Grid */}
-      <form onSubmit={handleSubmit} className="space-y-8 max-w-6xl mx-auto">
+      <form onSubmit={handleSubmit} className="space-y-8 max-w-[85%] mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           {/* Column 1: General Info (Width reduced to 5/12 ~ 41.6%) */}
           <div className="space-y-6 lg:col-span-5">

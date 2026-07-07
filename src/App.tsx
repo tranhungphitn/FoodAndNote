@@ -485,7 +485,7 @@ export default function App() {
     : [];
 
   // Pagination config
-  const ITEMS_PER_PAGE = 8;
+  const ITEMS_PER_PAGE = 16;
   const totalDishPages = Math.ceil(filteredDishes.length / ITEMS_PER_PAGE);
   const paginatedDishes = filteredDishes.slice(
     (currentDishPage - 1) * ITEMS_PER_PAGE,
@@ -645,7 +645,7 @@ export default function App() {
         {/* Subtle color tint strip */}
         <div className="absolute inset-0 bg-gradient-to-r from-[#6366f1]/5 via-[#8b5cf6]/5 to-[#ec4899]/5 pointer-events-none" />
 
-        <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between relative z-10">
+        <div className="max-w-[85%] w-full mx-auto px-4 py-3 flex items-center justify-between relative z-10">
           <div className="flex items-center gap-3">
             <div className="glass-card p-0.5 rounded-xl w-9 h-9 shrink-0 overflow-hidden flex items-center justify-center">
               <img src="/avatar.png" alt="Leo's Ghi Chú Logo" className="w-full h-full object-cover rounded-lg" />
@@ -688,7 +688,7 @@ export default function App() {
 
 
       {/* 2. Main Content Container block */}
-      <main className="flex-1 max-w-6xl w-full mx-auto px-3 sm:px-4 py-3 sm:py-6">
+      <main className="flex-1 max-w-[85%] w-full mx-auto px-3 sm:px-4 py-3 sm:py-6">
         
         {syncError && (
           <div className="mb-6 p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-2xl flex items-start gap-3 shadow-xs">
